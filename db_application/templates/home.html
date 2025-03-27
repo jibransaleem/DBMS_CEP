@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home</title>
+</head>
+<body class="flex flex-col items-center justify-center h-screen bg-gray-100">
+
+    <!-- Welcome Message -->
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center w-96">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-4">Welcome</h2>
+        <p class="text-gray-600 mb-6">We're glad to have you back. Enjoy your stay!</p>
+
+        <!-- Logout Button -->
+        <a href="{{url_for('login')}}" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300">Logout</a>
+    </div>
+
+</body>
+</html>

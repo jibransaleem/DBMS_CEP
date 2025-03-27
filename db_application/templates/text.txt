@@ -1,0 +1,60 @@
+###Commonly Used Fields
+StringField – Standard text input.
+
+PasswordField – Password input (hidden characters).
+
+EmailField – For email input (validates email format).
+
+SubmitField – Button for form submission.
+
+BooleanField – Checkbox for True/False values.
+
+IntegerField – Accepts integer values.
+
+FloatField – Accepts floating-point numbers.
+
+DecimalField – Accepts decimal values.
+
+TextAreaField – Multi-line text input (like a comment box).
+
+RadioField – Radio button selection.
+
+SelectField – Dropdown menu for single selection.
+
+SelectMultipleField – Dropdown menu for multiple selections.
+
+FileField – For file uploads.
+
+DateField – Accepts date values.
+
+DateTimeField – Accepts date and time values.
+
+TimeField – Accepts time values.
+
+HiddenField – Hidden input field (not visible in UI).
+
+#########Commonly Used Validators
+
+DataRequired – Ensures the field is not empty.
+
+Email – Ensures the input is a valid email address.
+
+Length – Restricts input length (min and max characters).
+
+EqualTo – Ensures two fields match (e.g., password confirmation).
+
+NumberRange – Restricts numerical input within a range.
+
+URL – Ensures the input is a valid URL.
+
+AnyOf – Ensures the value is one of the predefined options.
+
+NoneOf – Ensures the value is not one of the predefined options.
+
+Regexp – Validates input using a regular expression.
+
+Optional – Allows the field to be left empty.
+
+InputRequired – Ensures a field has input but allows empty values (unlike DataRequired).
+
+ValidationError – Custom validator for complex validation rules.
