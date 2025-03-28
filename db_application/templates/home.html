@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Home</title>
 </head>
-<body class="flex flex-col items-center justify-center h-screen bg-gray-100">
+<body class="bg-gray-100">
+    <div class="min-h-screen flex flex-col">
+        <nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">Dashboard</h1>
 
-    <!-- Welcome Message -->
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center w-96">
-        <h2 class="text-3xl font-semibold text-gray-800 mb-4">Welcome</h2>
-        <p class="text-gray-600 mb-6">We're glad to have you back. Enjoy your stay!</p>
-
-        <!-- Logout Button -->
-        <a href="{{url_for('login')}}" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300">Logout</a>
+            <a href="{{url_for('logout')}}" class="bg-red-500 px-4 py-2 rounded hover:bg-red-700">Logout</a>
+        </nav>
+        <main class="flex-grow container mx-auto p-6">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Welcome to Your Dashboard!</h2>
+                <p class="text-gray-700">This is a fancy dashboard with a logout button.</p>
+            </div>
+        </main>
+        <footer class="bg-blue-600 text-white text-center p-3 mt-auto">
+            &copy; 2025 Dashboard. All rights reserved.
+        </footer>
     </div>
-
 </body>
 </html>

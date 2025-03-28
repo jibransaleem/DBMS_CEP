@@ -3,57 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center h-screen bg-gradient-to-r from-blue-100 to-blue-300">
 
-    <form class="p-8 bg-white shadow-xl rounded-lg w-96 space-y-6" method="POST" action="{{ url_for('login') }}">
-        {{ form.hidden_tag() }}
-        <h2 class="text-3xl font-semibold text-gray-800 text-center">Login</h2>
+<body class="flex items-center justify-center h-screen bg-gradient-to-br from-blue-400 to-purple-500">
 
-        <!-- Email Field -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.email.label }}</label>
-            {{ form.email(class="p-3 border rounded-lg w-full mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500") }}
-            {% if form.email.errors %}
-                <ul class="text-sm text-red-500 mt-2">
-                    {% for err in form.email.errors %}
-                        <li>{{ err|lower }}</li>
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96">
+        <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Login to Your Account</h2>
+
+        <!-- ✅ Flash Messages Section -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-3 mb-2 text-white rounded-lg 
+                            {% if category == 'success' %} bg-green-500 {% elif category == 'danger' %} bg-red-500 {% endif %}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% endif %}
-        </div>
+        {% endwith %}
 
-        <!-- Password Field -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.password.label }}</label>
-            {{ form.password(class="p-3 border rounded-lg w-full mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500") }}
-            {% if form.password.errors %}
-                <ul class="text-sm text-red-500 mt-2">
-                    {% for err in form.password.errors %}
-                        <li>{{ err|lower }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
+        <!-- ✅ Login Form -->
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}  <!-- CSRF Protection -->
 
-        <!-- Role Selection Field -->
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.option.label }}</label>
-            {{ form.option(class="p-3 border rounded-lg w-full mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500") }}
-        </div>
+            <!-- Email Input -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">{{ form.email.label }}</label>
+                <div class="relative">
+                    <input type="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pl-10" placeholder="Enter your email" required>
+                    <span class="absolute left-3 top-3 text-gray-500">📧</span>
+                </div>
+            </div>
 
-        <!-- Submit Button -->
-        <div class="text-center">
-            {{ form.submit(class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300") }}
-        </div>
+            <!-- Password Input -->
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-1">{{ form.password.label }}</label>
+                <div class="relative">
+                    <input type="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pl-10" placeholder="Enter your password" required>
+                    <span class="absolute left-3 top-3 text-gray-500">🔒</span>
+                </div>
+            </div>
 
-        <p class="text-center text-sm text-gray-600">
+            <!-- Login Button -->
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg hover:opacity-90 transition duration-200">
+                Login
+            </button>
+        </form>
+
+        <!-- Signup Link -->
+        <p class="mt-4 text-center text-gray-600">
             Don't have an account? 
-            <a href="{{ url_for('Register') }}" class="text-blue-600 hover:underline">Register</a>
-        </p>   
-    </form>
+            <a href="{{ url_for('signup') }}" class="text-blue-500 font-semibold">Sign Up</a>
+        </p>
+    </div>
 
 </body>
 </html>

@@ -1,0 +1,17 @@
+[project]
+name = "cep"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bcrypt>=4.3.0",
+    "email-validator>=2.2.0",
+    "flask-migrate>=4.1.0",
+    "flask-mysql>=1.6.0",
+    "flask-mysqldb>=2.0.0",
+    "flask-sqlalchemy>=3.1.1",
+    "flask-wtf>=1.2.2",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
+]
