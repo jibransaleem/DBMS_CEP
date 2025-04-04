@@ -1,62 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            width: 300px;
-            text-align: center;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .login-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .login-container button:hover {
-            background-color: #555;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="login-container">
-        <h2>Login</h2>
-        <form>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
+{% block title %}Login | JobConnect{% endblock %}
+
+{% block content %}
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+                <div class="text-sm p-3 rounded-md 
+                    {% if category == 'success' %}bg-green-100 text-green-800
+                    {% elif category == 'error' %}bg-red-100 text-red-800
+                    {% else %}bg-blue-100 text-blue-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('login') }}" novalidate class="bg-white shadow-md rounded-xl p-6 space-y-5">
+    {{ form.hidden_tag() }}
+
+    <!-- Email Field -->
+    <div>
+        {{ form.email.label(class="block text-gray-700 font-semibold mb-1") }}
+        {{ form.email(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+        {% for error in form.email.errors %}
+            <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
     </div>
 
-</body>
-</html>
+    <!-- Password Field -->
+    <div>
+        {{ form.password.label(class="block text-gray-700 font-semibold mb-1") }}
+        {{ form.password(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+        {% for error in form.password.errors %}
+            <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Role Selection -->
+    <div>
+        {{ form.Role.label(class="block text-gray-700 font-semibold mb-1") }}
+        {{ form.Role(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+        {% for error in form.Role.errors %}
+            <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+        {{ form.submit(class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition") }}
+    </div>
+
+    <!-- Register Link -->
+    <p class="text-center text-sm text-gray-600">
+        Don't have an account?
+        <a href="{{ url_for('signup') }}" class="text-blue-600 hover:underline">Register here</a>
+    </p>
+</form>
+
+{% endblock %}

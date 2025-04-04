@@ -68,3 +68,17 @@ class RecruiterForm(FlaskForm):
     ])
     submit = SubmitField('Sign Up as Recruiter')
 
+class Login(FlaskForm):
+    email = EmailField('Email', validators=[
+        DataRequired(message="Please enter your email"),
+        Email(message="Please enter a valid email address")
+    ])
+    password = PasswordField('Password', validators=[
+        DataRequired(message="Please enter a password"),
+    ])
+
+    Role = SelectField('Login as', 
+        choices=['Candidate', 'Company'],
+        validators=[DataRequired(message="Please select your Login type")]
+    )
+    submit = SubmitField('Login')

@@ -4,362 +4,321 @@
 
 {% block extra_css %}
 <style>
-    /* Custom select styling */
-    select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 1rem;
-        padding-right: 2.5rem;
-    }
+    /* Core styles */
+    body { background: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .container { max-width: 420px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; }
     
-    /* Improved focus states */
-    input:focus, select:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-        border-color: #3b82f6;
-        transition: all 0.2s ease;
-    }
+    /* Form layout */
+    .header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+    .header h1 { margin: 0; font-size: 1.25rem; font-weight: 600; color: #0f172a; }
+    .header p { margin: 0.25rem 0 0; font-size: 0.875rem; color: #64748b; }
     
-    /* Button hover animation */
-    .btn-hover-effect {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+    .body { padding: 1.25rem 1.5rem; }
+    .footer { padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; text-align: center; }
+    .footer a { color: #2563eb; text-decoration: none; font-weight: 500; }
     
-    .btn-hover-effect:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Tabs */
+    .tabs { display: flex; margin-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; }
+    .tab { 
+        padding: 0.75rem 1rem; 
+        font-size: 0.875rem; 
+        color: #64748b; 
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s ease;
     }
+    .tab.active { color: #2563eb; border-color: #2563eb; font-weight: 500; }
+    .tab:hover:not(.active) { color: #334155; background: #f8fafc; }
     
-    /* Tab hover effect */
-    .tab-hover-effect:hover {
-        background-color: rgba(59, 130, 246, 0.1);
+    /* Form elements */
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #334155; margin-bottom: 0.375rem; }
+    .form-input { 
+        width: 100%; 
+        padding: 0.625rem 0.75rem; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 6px; 
+        font-size: 0.875rem;
+        transition: all 0.15s ease;
     }
+    .form-input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .form-input::placeholder { color: #94a3b8; }
     
-    /* Card shadow effect */
-    .card-shadow {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        transition: box-shadow 0.3s ease;
+    /* Button */
+    .btn {
+        width: 100%;
+        padding: 0.625rem 1rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s ease;
     }
+    .btn:hover { background: #1d4ed8; }
     
-    .card-shadow:hover {
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* Password field */
+    .password-field { position: relative; }
+    .password-toggle { 
+        position: absolute; 
+        right: 0.75rem; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        color: #94a3b8; 
+        cursor: pointer;
+        transition: color 0.15s ease;
     }
+    .password-toggle:hover { color: #64748b; }
+    
+    /* Messages */
+    .message { 
+        padding: 0.75rem; 
+        margin-bottom: 1rem; 
+        border-radius: 6px; 
+        font-size: 0.875rem; 
+        display: flex;
+        align-items: flex-start;
+    }
+    .message i { margin-right: 0.5rem; margin-top: 0.125rem; }
+    .error { background: #fef2f2; color: #b91c1c; }
+    .success { background: #f0fdf4; color: #15803d; }
+    
+    /* Error text */
+    .error-text { color: #ef4444; font-size: 0.75rem; margin-top: 0.25rem; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="bg-white rounded-lg overflow-hidden card-shadow">
-    <div class="p-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-        <h2 class="text-2xl font-bold text-gray-900">Create an account</h2>
-        <p class="text-gray-600 mt-2">Sign up to start your journey with JobConnect</p>
-    </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="px-8 pt-6">
-                {% for category, message in messages %}
-                    <div class="p-4 mb-4 {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded-md">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <!-- Tabs -->
-    <div class="px-8 pt-6">
-        <div class="flex border-b">
-            <button id="job-seeker-tab" class="tab-btn py-4 px-6 border-b-2 border-blue-500 text-blue-600 font-medium flex items-center transition-all duration-200 tab-hover-effect">
-                <i class="fas fa-user mr-2"></i> Job Seeker
-            </button>
-            <button id="recruiter-tab" class="tab-btn py-4 px-6 border-b-2 border-transparent text-gray-500 font-medium flex items-center transition-all duration-200 tab-hover-effect">
-                <i class="fas fa-briefcase mr-2"></i> Recruiter
-            </button>
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1>Create your account</h1>
+            <p>Join JobConnect and start your professional journey</p>
         </div>
-    </div>
 
-    <!-- Job Seeker Form -->
-    <div id="job-seeker-form" class="tab-content p-8 space-y-5">
-        <form method="POST" action="{{ url_for('signup') }}">
-            {{ job_seeker_form.csrf_token }}
-            
-            <div class="space-y-2">
-                {{ job_seeker_form.name.label(class="block text-sm font-medium text-gray-700") }}
-                {{ job_seeker_form.name(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="John Doe") }}
-                {% if job_seeker_form.name.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in job_seeker_form.name.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
+        <div class="body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message {% if category == 'error' %}error{% else %}success{% endif %}">
+                            <i class="fas {% if category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
                 {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ job_seeker_form.email.label(class="block text-sm font-medium text-gray-700") }}
-                {{ job_seeker_form.email(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="john.doe@example.com") }}
-                {% if job_seeker_form.email.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in job_seeker_form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ job_seeker_form.phone.label(class="block text-sm font-medium text-gray-700") }}
-                {{ job_seeker_form.phone(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="+1 (123) 456-7890") }}
-                {% if job_seeker_form.phone.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in job_seeker_form.phone.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ job_seeker_form.password.label(class="block text-sm font-medium text-gray-700") }}
-                <div class="relative">
-                    {{ job_seeker_form.password(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none") }}
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <i class="fas fa-eye-slash text-gray-400 cursor-pointer toggle-password"></i>
-                    </div>
-                </div>
-                {% if job_seeker_form.password.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in job_seeker_form.password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ job_seeker_form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
-                <div class="relative">
-                    {{ job_seeker_form.confirm_password(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none") }}
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <i class="fas fa-eye-slash text-gray-400 cursor-pointer toggle-password"></i>
-                    </div>
-                </div>
-                {% if job_seeker_form.confirm_password.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in job_seeker_form.confirm_password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="mt-8">
-                {{ job_seeker_form.submit(class="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 btn-hover-effect") }}
-            </div>
-        </form>
-    </div>
+            {% endwith %}
 
-    <!-- Recruiter Form -->
-    <div id="recruiter-form" class="tab-content p-8 space-y-5 hidden">
-        <form method="POST" action="{{ url_for('signup') }}">
-            {{ recruiter_form.csrf_token }}
-            
-            <div class="space-y-2">
-                {{ recruiter_form.company_name.label(class="block text-sm font-medium text-gray-700") }}
-                {{ recruiter_form.company_name(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="Acme Inc.") }}
-                {% if recruiter_form.company_name.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_name.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+            <div class="tabs">
+                <div id="job-seeker-tab" class="tab active">Job Seeker</div>
+                <div id="recruiter-tab" class="tab">Recruiter</div>
             </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_email.label(class="block text-sm font-medium text-gray-700") }}
-                {{ recruiter_form.company_email(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="contact@acme.com") }}
-                {% if recruiter_form.company_email.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_phone.label(class="block text-sm font-medium text-gray-700") }}
-                {{ recruiter_form.company_phone(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="+1 (123) 456-7890") }}
-                {% if recruiter_form.company_phone.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_phone.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_location.label(class="block text-sm font-medium text-gray-700") }}
-                {{ recruiter_form.company_location(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none", placeholder="City, Country") }}
-                {% if recruiter_form.company_location.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_location.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_industry.label(class="block text-sm font-medium text-gray-700") }}
-                {{ recruiter_form.company_industry(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none") }}
-                {% if recruiter_form.company_industry.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_industry.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_password.label(class="block text-sm font-medium text-gray-700") }}
-                <div class="relative">
-                    {{ recruiter_form.company_password(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none") }}
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <i class="fas fa-eye-slash text-gray-400 cursor-pointer toggle-password"></i>
-                    </div>
-                </div>
-                {% if recruiter_form.company_password.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="space-y-2 mt-5">
-                {{ recruiter_form.company_confirm_password.label(class="block text-sm font-medium text-gray-700") }}
-                <div class="relative">
-                    {{ recruiter_form.company_confirm_password(class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none") }}
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <i class="fas fa-eye-slash text-gray-400 cursor-pointer toggle-password"></i>
-                    </div>
-                </div>
-                {% if recruiter_form.company_confirm_password.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in recruiter_form.company_confirm_password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            
-            <div class="mt-8">
-                {{ recruiter_form.submit(class="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 btn-hover-effect") }}
-            </div>
-        </form>
-    </div>
 
-    <div class="px-8 py-6 bg-gray-50 border-t border-gray-200 text-center">
-        <p class="text-sm text-gray-600">
-            Already have an account?
-            <a href="{{ url_for('login') }}" class="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200">
-                Sign in
-            </a>
-        </p>
+            <!-- Job Seeker Form -->
+            <div id="job-seeker-form">
+                <form method="POST" action="{{ url_for('signup') }}">
+                    {{ job_seeker_form.csrf_token }}
+                    <input type="hidden" name="user_type" value="job_seeker">
+                    
+                    <div class="form-group">
+                        {{ job_seeker_form.name.label(class="form-label") }}
+                        {{ job_seeker_form.name(class="form-input", placeholder="John Doe") }}
+                        {% if job_seeker_form.name.errors %}
+                            <div class="error-text">{{ job_seeker_form.name.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ job_seeker_form.email.label(class="form-label") }}
+                        {{ job_seeker_form.email(class="form-input email-field", placeholder="john.doe@example.com") }}
+                        {% if job_seeker_form.email.errors %}
+                            <div class="error-text">{{ job_seeker_form.email.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ job_seeker_form.phone.label(class="form-label") }}
+                        {{ job_seeker_form.phone(class="form-input", placeholder="+1 (123) 456-7890") }}
+                        {% if job_seeker_form.phone.errors %}
+                            <div class="error-text">{{ job_seeker_form.phone.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ job_seeker_form.password.label(class="form-label") }}
+                        <div class="password-field">
+                            {{ job_seeker_form.password(class="form-input", id="js-password") }}
+                            <i class="fas fa-eye-slash password-toggle"></i>
+                        </div>
+                        {% if job_seeker_form.password.errors %}
+                            <div class="error-text">{{ job_seeker_form.password.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ job_seeker_form.confirm_password.label(class="form-label") }}
+                        <div class="password-field">
+                            {{ job_seeker_form.confirm_password(class="form-input") }}
+                            <i class="fas fa-eye-slash password-toggle"></i>
+                        </div>
+                        {% if job_seeker_form.confirm_password.errors %}
+                            <div class="error-text">{{ job_seeker_form.confirm_password.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:0;">
+                        {{ job_seeker_form.submit(class="btn", value="Create Account") }}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recruiter Form -->
+            <div id="recruiter-form" style="display:none;">
+                <form method="POST" action="{{ url_for('signup') }}">
+                    {{ recruiter_form.csrf_token }}
+                    <input type="hidden" name="user_type" value="recruiter">
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_name.label(class="form-label") }}
+                        {{ recruiter_form.company_name(class="form-input", placeholder="Acme Inc.") }}
+                        {% if recruiter_form.company_name.errors %}
+                            <div class="error-text">{{ recruiter_form.company_name.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_email.label(class="form-label") }}
+                        {{ recruiter_form.company_email(class="form-input email-field", placeholder="contact@acme.com") }}
+                        {% if recruiter_form.company_email.errors %}
+                            <div class="error-text">{{ recruiter_form.company_email.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_phone.label(class="form-label") }}
+                        {{ recruiter_form.company_phone(class="form-input", placeholder="+1 (123) 456-7890") }}
+                        {% if recruiter_form.company_phone.errors %}
+                            <div class="error-text">{{ recruiter_form.company_phone.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_location.label(class="form-label") }}
+                        {{ recruiter_form.company_location(class="form-input", placeholder="City, Country") }}
+                        {% if recruiter_form.company_location.errors %}
+                            <div class="error-text">{{ recruiter_form.company_location.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_industry.label(class="form-label") }}
+                        {{ recruiter_form.company_industry(class="form-input") }}
+                        {% if recruiter_form.company_industry.errors %}
+                            <div class="error-text">{{ recruiter_form.company_industry.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_password.label(class="form-label") }}
+                        <div class="password-field">
+                            {{ recruiter_form.company_password(class="form-input") }}
+                            <i class="fas fa-eye-slash password-toggle"></i>
+                        </div>
+                        {% if recruiter_form.company_password.errors %}
+                            <div class="error-text">{{ recruiter_form.company_password.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ recruiter_form.company_confirm_password.label(class="form-label") }}
+                        <div class="password-field">
+                            {{ recruiter_form.company_confirm_password(class="form-input") }}
+                            <i class="fas fa-eye-slash password-toggle"></i>
+                        </div>
+                        {% if recruiter_form.company_confirm_password.errors %}
+                            <div class="error-text">{{ recruiter_form.company_confirm_password.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:0;">
+                        {{ recruiter_form.submit(class="btn", value="Create Company Account") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p style="margin:0; font-size:0.875rem; color:#64748b;">
+                Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Tab switching functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const jobSeekerTab = document.getElementById('job-seeker-tab');
-        const recruiterTab = document.getElementById('recruiter-tab');
-        const jobSeekerForm = document.getElementById('job-seeker-form');
-        const recruiterForm = document.getElementById('recruiter-form');
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
+    const jobSeekerTab = document.getElementById('job-seeker-tab');
+    const recruiterTab = document.getElementById('recruiter-tab');
+    const jobSeekerForm = document.getElementById('job-seeker-form');
+    const recruiterForm = document.getElementById('recruiter-form');
 
-        jobSeekerTab.addEventListener('click', function() {
-            // Update tab styles
-            jobSeekerTab.classList.add('border-blue-500', 'text-blue-600');
-            jobSeekerTab.classList.remove('border-transparent', 'text-gray-500');
-            recruiterTab.classList.add('border-transparent', 'text-gray-500');
-            recruiterTab.classList.remove('border-blue-500', 'text-blue-600');
-            
-            // Show/hide forms
-            jobSeekerForm.classList.remove('hidden');
-            recruiterForm.classList.add('hidden');
-        });
+    jobSeekerTab.onclick = () => {
+        jobSeekerTab.classList.add('active');
+        recruiterTab.classList.remove('active');
+        jobSeekerForm.style.display = 'block';
+        recruiterForm.style.display = 'none';
+    };
+    
+    recruiterTab.onclick = () => {
+        recruiterTab.classList.add('active');
+        jobSeekerTab.classList.remove('active');
+        recruiterForm.style.display = 'block';
+        jobSeekerForm.style.display = 'none';
+    };
 
-        recruiterTab.addEventListener('click', function() {
-            // Update tab styles
-            recruiterTab.classList.add('border-blue-500', 'text-blue-600');
-            recruiterTab.classList.remove('border-transparent', 'text-gray-500');
-            jobSeekerTab.classList.add('border-transparent', 'text-gray-500');
-            jobSeekerTab.classList.remove('border-blue-500', 'text-blue-600');
-            
-            // Show/hide forms
-            recruiterForm.classList.remove('hidden');
-            jobSeekerForm.classList.add('hidden');
-        });
+    // Password visibility toggle
+    document.querySelectorAll('.password-toggle').forEach(toggle => {
+        toggle.onclick = function() {
+            const input = this.closest('.password-field').querySelector('input');
+            input.type = input.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        };
+    });
 
-        // Password visibility toggle
-        const togglePasswordButtons = document.querySelectorAll('.toggle-password');
-        togglePasswordButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const passwordField = this.closest('.relative').querySelector('input');
-                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordField.setAttribute('type', type);
-                
-                // Toggle icon
-                if (type === 'text') {
-                    this.classList.remove('fa-eye-slash');
-                    this.classList.add('fa-eye');
-                } else {
-                    this.classList.remove('fa-eye');
-                    this.classList.add('fa-eye-slash');
-                }
+    // Email already taken error
+    const errorMessages = document.querySelectorAll('.message.error');
+    errorMessages.forEach(message => {
+        if (message.textContent.includes('email') && 
+            (message.textContent.includes('already') || message.textContent.includes('taken'))) {
+            document.querySelectorAll('.email-field').forEach(field => {
+                field.style.borderColor = '#ef4444';
+                field.onfocus = () => field.style.borderColor = '';
             });
-        });
-
-        // Password strength indicator (simple version)
-        const passwordFields = document.querySelectorAll('input[type="password"]');
-        passwordFields.forEach(field => {
-            if (field.id.includes('confirm')) return; // Skip confirm password fields
-            
-            field.addEventListener('input', function() {
-                const password = this.value;
-                const strength = calculatePasswordStrength(password);
-                
-                // You could add a visual indicator here
-                if (strength === 'weak') {
-                    this.classList.add('border-red-300');
-                    this.classList.remove('border-yellow-300', 'border-green-300');
-                } else if (strength === 'medium') {
-                    this.classList.add('border-yellow-300');
-                    this.classList.remove('border-red-300', 'border-green-300');
-                } else {
-                    this.classList.add('border-green-300');
-                    this.classList.remove('border-red-300', 'border-yellow-300');
-                }
-            });
-        });
-
-        function calculatePasswordStrength(password) {
-            if (password.length < 8) return 'weak';
-            if (password.length >= 12 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
-                return 'strong';
-            }
-            return 'medium';
         }
     });
+    
+    // Password strength
+    document.querySelectorAll('input[type="password"]').forEach(input => {
+        if (!input.id.includes('confirm')) {
+            input.oninput = function() {
+                const strength = this.value.length < 8 ? 'weak' : 
+                                (this.value.length >= 12 && 
+                                 /[A-Z]/.test(this.value) && 
+                                 /[a-z]/.test(this.value) && 
+                                 /[0-9]/.test(this.value) && 
+                                 /[^A-Za-z0-9]/.test(this.value)) ? 'strong' : 'medium';
+                
+                this.style.borderColor = strength === 'weak' ? '#ef4444' : 
+                                        strength === 'medium' ? '#f59e0b' : '#10b981';
+            };
+        }
+    });
+});
 </script>
 {% endblock %}
-
