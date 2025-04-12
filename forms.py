@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TelField, EmailField, SubmitField, PasswordField, SelectField
+from wtforms import StringField, TelField, EmailField, SubmitField, PasswordField, SelectField , TextAreaField,DateField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
 class JobSeekerForm(FlaskForm):
@@ -82,3 +82,55 @@ class Login(FlaskForm):
         validators=[DataRequired(message="Please select your Login type")]
     )
     submit = SubmitField('Login')
+class JobPostForm(FlaskForm):
+    title = StringField('Job Title', validators=[
+        DataRequired(), Length(min=3, max=100)
+    ])
+    
+    description = TextAreaField('Job Description', validators=[
+        DataRequired(), Length(min=10)
+    ])
+    qualification = TextAreaField('Job Qualification', validators=[
+        DataRequired(), Length(min=10)
+    ])
+
+    location = StringField('Job Location', validators=[
+        DataRequired(), Length(min=2, max=100)
+    ])
+
+    city = StringField('Job City', validators=[
+        DataRequired(), Length(min=2, max=100)
+    ])
+
+    job_type = SelectField('Job Type', choices=[
+        ('Full-time', 'Full-time'),
+        ('Part-time', 'Part-time'),
+        ('Trainee', 'Trainee'),
+        ('Internship', 'Internship'),
+    ], validators=[DataRequired()])
+
+    SALARY_CHOICES = [
+    ('Below 30,000', 'Below 30,000'),
+    ('30,000 - 50,000', '30,000 - 50,000'),
+    ('50,000 - 70,000', '50,000 - 70,000'),
+    ('70,000 - 100,000', '70,000 - 100,000'),
+    ('Above 100,000', 'Above 100,000'),
+]
+    salary = SelectField('Salary Range', choices=SALARY_CHOICES, validators=[DataRequired()])
+    skills = StringField('Skills Required', validators=[
+        DataRequired(), Length(min=2)
+    ])
+    job_industry = SelectField(
+        'Job Industry',
+        choices=[
+            ("technology", "Technology"),
+            ("healthcare", "Healthcare"),
+            ("finance", "Finance"),
+            ("education", "Education"),
+            ("retail", "Retail"),
+            ("manufacturing", "Manufacturing"),
+            ("other", "Other")
+        ],
+        validators=[DataRequired()]
+    )
+    submit = SubmitField('Post Job')

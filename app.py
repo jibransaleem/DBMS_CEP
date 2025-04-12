@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, session, flash, request
-from forms import JobSeekerForm, RecruiterForm, Login
+from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm
 import bcrypt
-from models import db, Config, Candidate, Company
+from models import db, Config, Candidate, Company ,JobPosting
+from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.config.from_object(Config)
 db.init_app(app)
 
@@ -97,15 +98,16 @@ def login():
         role = form.Role.data
 
         if role == 'Company':
-            user = Company.query.filter_by(email=email).first()
+            user = Company.query.filter_by(company_email=email).first()
+            key = user.company_password
         else:
             user = Candidate.query.filter_by(email=email).first()
-
+            key = user.password
         if user is None:
             flash("User not found!", "danger")
             return redirect(url_for("login"))
 
-        key = user.password
+        
         if not bcrypt.checkpw(password.encode("utf-8"), key.encode("utf-8")):
             flash("Incorrect Password!", "warning")
             return redirect(url_for("login"))
@@ -139,6 +141,58 @@ def company():
         flash("Please login as a Company to continue", "warning")
         return redirect(url_for("login"))
     return render_template("company.html")
+
+@app.route("/ChangePassword")
+def Edit_password() :
+    return render_template("change_password.html")
+@app.route("/EditCompanyDetails")
+def Edit_Company_Details() :
+    return render_template("edit_comp.html")
+@app.route("/EditJobs")
+def Edit_Jobs() :
+    return render_template("edit_job.html")
+@app.route("/PostJob" , methods =['POST', 'GET'])
+def Post_Jobs() :
+    form = JobPostForm()
+    if form.validate_on_submit() :
+        title =  form.title.data 
+        description = form.description.data
+        qualification = form.qualification.data
+        location = form.location.data
+        city = form.city.data
+        salary = form.salary.data
+        skills =  form.skills.data
+        job_type = form.job_type.data
+        current_time = datetime.now()
+        dop = current_time.strftime("%d-%m-%Y")
+        job_industry = form.job_industry.data
+        job_data = JobPosting(
+            job_title=title,
+            job_industry =  job_industry , 
+            job_description=description,
+            job_qualification=qualification,
+            job_location=location,
+            job_city=city,
+            job_skills = skills,
+            job_salary=salary,  
+            job_type=job_type,  
+            job_dop=dop,       
+            company_id=session['user_id']  # Make sure this is fetched correctly
+)
+        db.session.add(job_data)
+        db.session.commit()
+        flash('Job posted successfully!', 'success')
+        return redirect(url_for('Post_Jobs'))
+# Add the new job posting to the session and commit it to the database
+    return render_template("post_job.html", form = form)
+@app.route("/ViewApplications")
+def View_Applications() :
+    return render_template("vew_appli.html")
+@app.route("/ViewJob")
+def View_Jobs() :
+    return render_template("view_jobs.html")
+
+
 
 # ------------------ RUN APP ------------------
 

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Job | JobConnect{% endblock %}
+
+{% block content %}
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+                <div class="text-sm p-3 rounded-md 
+                    {% if category == 'success' %}bg-green-100 text-green-800
+                    {% elif category == 'error' %}bg-red-100 text-red-800
+                    {% else %}bg-blue-100 text-blue-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="bg-white shadow-md rounded-xl p-6 w-full max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+            <i class="fas fa-edit text-blue-500 mr-2"></i>Edit Job
+        </h1>
+        <a href="{{ url_for('##') }}" class="text-blue-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Jobs
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('##', job_id=job.id) }}" novalidate class="space-y-5">
+        {{ form.hidden_tag() }}
+
+        <!-- Job Title -->
+        <div>
+            {{ form.title.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.title(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.title.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Job Description -->
+        <div>
+            {{ form.description.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.description(class="w-full px-4 py-2 border rounded-md form-input-focus h-32") }}
+            {% for error in form.description.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Job Location -->
+            <div>
+                {{ form.location.label(class="block text-gray-700 font-semibold mb-1") }}
+                {{ form.location(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+                {% for error in form.location.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Job Type -->
+            <div>
+                {{ form.job_type.label(class="block text-gray-700 font-semibold mb-1") }}
+                {{ form.job_type(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+                {% for error in form.job_type.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Salary Range -->
+            <div>
+                {{ form.salary_range.label(class="block text-gray-700 font-semibold mb-1") }}
+                {{ form.salary_range(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+                {% for error in form.salary_range.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Experience Required -->
+            <div>
+                {{ form.experience.label(class="block text-gray-700 font-semibold mb-1") }}
+                {{ form.experience(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+                {% for error in form.experience.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Skills Required -->
+        <div>
+            {{ form.skills.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.skills(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            <p class="text-xs text-gray-500 mt-1">Separate skills with commas</p>
+            {% for error in form.skills.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Application Deadline -->
+        <div>
+            {{ form.deadline.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.deadline(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.deadline.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Job Status -->
+        <div>
+            {{ form.status.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.status(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+            {% for error in form.status.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end space-x-3">
+            <a href="{{ url_for('##') }}" class="border border-gray-300 text-gray-700 py-2 px-6 rounded-md font-semibold hover:bg-gray-50 transition">
+                Cancel
+            </a>
+            <button type="submit" class="bg-blue-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-blue-700 transition">
+                Update Job
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

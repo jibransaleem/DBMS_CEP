@@ -1,3 +1,7 @@
+
+{% comment %} <p class="text-2xl font-bold text-blue-600">{{ stats.active_jobs }}</p> {% endcomment %}
+{% comment %} <p class="text-2xl font-bold text-green-600">{{ stats.total_applications }}</p> {% endcomment %}
+{% comment %} <p class="text-2xl font-bold text-purple-600">{{ stats.new_applications }}</p> {% endcomment %}
 from flask import Flask, render_template, redirect, flash, url_for, session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm

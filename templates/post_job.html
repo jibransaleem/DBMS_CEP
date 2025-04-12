@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job | JobConnect</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-3xl">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                    <div class="bg-green-500 text-white p-4 rounded-lg">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">
+                <i class="fas fa-plus-circle text-blue-500 mr-2"></i> Post a New Job
+            </h1>
+            <a href="/company" class="text-blue-600 hover:text-blue-800 font-medium flex items-center transition duration-200">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <form method="POST" action="{{ url_for('Post_Jobs') }}" novalidate class="space-y-6">
+            {{ form.hidden_tag() }}
+
+            <!-- Job Title -->
+            <div>
+                {{ form.title.label(class="block text-gray-700 font-semibold mb-2") }}
+                {{ form.title(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200", placeholder="e.g. Software Engineer") }}
+                {% if form.title.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ form.title.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Job Description -->
+            <div>
+                {{ form.description.label(class="block text-gray-700 font-semibold mb-2") }}
+                {{ form.description(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200 h-40", placeholder="Describe the job responsibilities, requirements, etc.") }}
+                {% if form.description.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ form.description.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Qualification -->
+            <div>
+                {{ form.qualification.label(class="block text-gray-700 font-semibold mb-2") }}
+                {{ form.qualification(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200 h-28", placeholder="Enter qualifications required") }}
+                {% if form.qualification.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ form.qualification.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Location -->
+                <div>
+                    {{ form.location.label(class="block text-gray-700 font-semibold mb-2") }}
+                    {{ form.location(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200", placeholder="e.g. Remote or On-site") }}
+                    {% if form.location.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.location.errors[0] }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- City -->
+                <div>
+                    {{ form.city.label(class="block text-gray-700 font-semibold mb-2") }}
+                    {{ form.city(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200", placeholder="e.g. New York") }}
+                    {% if form.city.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.city.errors[0] }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Job Type -->
+                <div>
+                    {{ form.job_type.label(class="block text-gray-700 font-semibold mb-2") }}
+                    {{ form.job_type(class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200") }}
+                    {% if form.job_type.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.job_type.errors[0] }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Salary Range -->
+                <div>
+                    <label for="salary_range" class="block text-gray-700 font-semibold mb-2">Salary Range</label>
+                    {{ form.salary(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200 bg-white") }}
+                    {% if form.salary.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.salary.errors[0] }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Job Industry -->
+            <div>
+                {{ form.job_industry.label(class="block text-gray-700 font-semibold mb-2") }}
+                {{ form.job_industry(class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200") }}
+                {% if form.job_industry.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ form.job_industry.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Skills -->
+            <div>
+                {{ form.skills.label(class="block text-gray-700 font-semibold mb-2") }}
+                {{ form.skills(class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200", placeholder="e.g. Python, JavaScript, SQL") }}
+                <p class="text-xs text-gray-500 mt-1">Separate skills with commas</p>
+                {% if form.skills.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ form.skills.errors[0] }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Submit -->
+            <div class="flex justify-end">
+                {{ form.submit(class="bg-blue-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200") }}
+            </div>
+        </form>
+    </div>
+</body>
+</html>

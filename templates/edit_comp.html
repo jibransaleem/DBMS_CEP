@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Company Profile | JobConnect{% endblock %}
+
+{% block content %}
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mb-4">
+            {% for category, message in messages %}
+                <div class="text-sm p-3 rounded-md 
+                    {% if category == 'success' %}bg-green-100 text-green-800
+                    {% elif category == 'error' %}bg-red-100 text-red-800
+                    {% else %}bg-blue-100 text-blue-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="bg-white shadow-md rounded-xl p-6 w-full max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+            <i class="fas fa-building text-blue-500 mr-2"></i>Company Profile
+        </h1>
+        <a href="{{ url_for('##') }}" class="text-blue-600 hover:underline flex items-center">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <form method="POST" action="{{ url_for('##') }}" enctype="multipart/form-data" novalidate class="space-y-5">
+        {{ form.hidden_tag() }}
+
+        <!-- Company Logo -->
+        <div class="flex flex-col md:flex-row md:items-center gap-4">
+            <div class="md:w-1/4">
+                <div class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                    {% if company.logo %}
+                        <img src="{{ url_for('static', filename='uploads/' + company.logo) }}" alt="{{ company.name }} Logo" class="w-full h-full object-cover">
+                    {% else %}
+                        <i class="fas fa-building text-gray-400 text-5xl"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="md:w-3/4">
+                {{ form.logo.label(class="block text-gray-700 font-semibold mb-1") }}
+                {{ form.logo(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+                <p class="text-xs text-gray-500 mt-1">Upload a square image for best results (JPG, PNG)</p>
+                {% for error in form.logo.errors %}
+                    <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Company Name -->
+        <div>
+            {{ form.name.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.name(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.name.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Company Website -->
+        <div>
+            {{ form.website.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.website(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.website.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Company Industry -->
+        <div>
+            {{ form.industry.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.industry(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+            {% for error in form.industry.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Company Size -->
+        <div>
+            {{ form.company_size.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.company_size(class="w-full px-4 py-2 border rounded-md bg-white form-input-focus") }}
+            {% for error in form.company_size.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Company Location -->
+        <div>
+            {{ form.location.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.location(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.location.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Company Description -->
+        <div>
+            {{ form.description.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.description(class="w-full px-4 py-2 border rounded-md form-input-focus h-32") }}
+            {% for error in form.description.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Contact Email -->
+        <div>
+            {{ form.contact_email.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.contact_email(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.contact_email.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Contact Phone -->
+        <div>
+            {{ form.contact_phone.label(class="block text-gray-700 font-semibold mb-1") }}
+            {{ form.contact_phone(class="w-full px-4 py-2 border rounded-md form-input-focus") }}
+            {% for error in form.contact_phone.errors %}
+                <p class="text-sm text-red-500 mt-1">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button type="submit" class="bg-blue-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-blue-700 transition">
+                Update Profile
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
