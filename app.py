@@ -145,9 +145,27 @@ def company():
 @app.route("/ChangePassword")
 def Edit_password() :
     return render_template("change_password.html")
-@app.route("/EditCompanyDetails")
-def Edit_Company_Details() :
-    return render_template("edit_comp.html")
+@app.route("/EditCompanyDetails", methods=['GET', 'POST'])
+def Edit_Company_Details():
+    form = RecruiterForm()
+    data = Company.query.filter_by(id=session['user_id']).first()
+
+    if 'user_id' not in session:
+        flash('User not logged in!', 'error')
+        return redirect(url_for('login'))
+    if request.method == "POST" and form.validate_on_submit():
+        # Process form data
+        data.company_name = form.company_name.data
+        data.company_email = form.company_email.data
+        data.company_phone = form.company_phone.data
+        data.company_location = form.company_location.data
+        data.company_industry = form.company_industry.data
+
+        db.session.commit()
+        flash('Company details updated successfully!', 'success')
+        return redirect(url_for('company'))  # Adjust this to where you want to go after submission
+
+    return render_template("edit_comp.html", form=form, data=data)
 @app.route("/EditJobs")
 def Edit_Jobs() :
     return render_template("edit_job.html")

@@ -67,6 +67,7 @@ class RecruiterForm(FlaskForm):
         EqualTo('company_password', message="Passwords must match")
     ])
     submit = SubmitField('Sign Up as Recruiter')
+    edit = SubmitField('Save Make changes')
 
 class Login(FlaskForm):
     email = EmailField('Email', validators=[
