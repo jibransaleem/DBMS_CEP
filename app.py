@@ -187,12 +187,12 @@ def Post_Jobs() :
     return render_template("post_job.html", form = form)
 @app.route("/ViewApplications")
 def View_Applications() :
-    return render_template("vew_appli.html")
+    return "<h1>GOOD</h1>"
+    
 @app.route("/ViewJob")
-def View_Jobs() :
-    return render_template("view_jobs.html")
-
-
+def View_Jobs():
+    job = JobPosting.query.filter_by(company_id=session['user_id']).all()
+    return render_template("view_jobs.html", jobs=job)
 
 # ------------------ RUN APP ------------------
 

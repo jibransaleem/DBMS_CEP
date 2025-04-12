@@ -1,156 +1,242 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Jobs | JobConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        scale: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        }
+                    },
+                    animation: {
+                        shimmer: 'shimmer 2s infinite',
+                        float: 'float 6s ease-in-out infinite',
+                        scale: 'scale 6s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
 
-{% block title %}Posted Jobs | JobConnect{% endblock %}
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
 
-{% block content %}
-<!-- Flash Messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="mb-4">
-            {% for category, message in messages %}
-                <div class="text-sm p-3 rounded-md 
-                    {% if category == 'success' %}bg-green-100 text-green-800
-                    {% elif category == 'error' %}bg-red-100 text-red-800
-                    {% else %}bg-blue-100 text-blue-800{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+        .shimmer::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0,
+                rgba(255, 255, 255, 0.2) 20%,
+                rgba(255, 255, 255, 0.5) 60%,
+                rgba(255, 255, 255, 0)
+            );
+            animation: shimmer 2s infinite;
+            content: '';
+        }
 
-<div class="bg-white shadow-md rounded-xl p-6 w-full max-w-4xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">
-            <i class="fas fa-list text-blue-500 mr-2"></i>Posted Jobs
-        </h1>
-        <div class="flex space-x-3">
-            <a href="{{ url_for('##') }}" class="text-blue-600 hover:underline flex items-center">
-                <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
-            </a>
-            <a href="{{ url_for('##') }}" class="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition flex items-center">
-                <i class="fas fa-plus-circle mr-1"></i> Post New Job
-            </a>
-        </div>
-    </div>
+        .gradient-border {
+            position: relative;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+        }
 
-    <!-- Search and Filter -->
-    <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-        <form method="GET" action="{{ url_for('##') }}" class="flex flex-col md:flex-row gap-3">
-            <div class="flex-grow">
-                <input type="text" name="search" placeholder="Search jobs..." value="{{ request.args.get('search', '') }}" 
-                    class="w-full px-4 py-2 border rounded-md form-input-focus">
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 0.85rem;
+            background: linear-gradient(
+                45deg,
+                #0ea5e9,
+                #38bdf8,
+                #7dd3fc,
+                #0ea5e9
+            );
+            mask: 
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .bg-mesh {
+            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen p-6 antialiased">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header with enhanced design -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 space-y-4 sm:space-y-0">
+            <div class="fade-in-up" style="animation-delay: 0.1s">
+                <h1 class="text-4xl font-extrabold text-gray-900 flex items-center group">
+                    <i class="fas fa-briefcase text-sky-500 mr-3 group-hover:animate-bounce transition-all duration-300"></i>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-sky-600">
+                        Your Jobs
+                    </span>
+                </h1>
+                <p class="mt-2 text-gray-600">Manage and track your job postings</p>
             </div>
-            <div class="md:w-1/4">
-                <select name="status" class="w-full px-4 py-2 border rounded-md bg-white form-input-focus">
-                    <option value="">All Statuses</option>
-                    <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>Active</option>
-                    <option value="closed" {% if request.args.get('status') == 'closed' %}selected{% endif %}>Closed</option>
-                    <option value="draft" {% if request.args.get('status') == 'draft' %}selected{% endif %}>Draft</option>
-                </select>
+            
+            <div class="flex items-center gap-4 fade-in-up" style="animation-delay: 0.2s">
+                <a href="{{ url_for('Post_Jobs') }}" 
+                   class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden">
+                    <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
+                    <span class="relative flex items-center">
+                        <i class="fas fa-plus-circle mr-2 group-hover:animate-spin"></i>
+                        Post a Job
+                    </span>
+                </a>
+                
+                <a href="{{ url_for('company') }}" 
+                   class="group relative px-6 py-3 rounded-full font-semibold text-gray-700 overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-colors duration-300">
+                    <span class="relative flex items-center">
+                        <i class="fas fa-arrow-left mr-2 group-hover:transform group-hover:-translate-x-1 transition-transform"></i>
+                        Dashboard
+                    </span>
+                </a>
             </div>
-            <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 transition">
-                Filter
-            </button>
-        </form>
-    </div>
+        </div>
 
-    <!-- Jobs List -->
-    {% if jobs %}
-        <div class="space-y-4">
+        <!-- Enhanced Job Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for job in jobs %}
-                <div class="border rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-semibold text-lg text-gray-800">{{ job.title }}</h3>
-                            <div class="flex flex-wrap gap-2 mt-2">
-                                <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>{{ job.location }}
-                                </span>
-                                <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-briefcase mr-1"></i>{{ job.job_type }}
-                                </span>
-                                <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-money-bill-wave mr-1"></i>{{ job.salary_range }}
-                                </span>
-                                <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-calendar-alt mr-1"></i>Deadline: {{ job.deadline.strftime('%d %b, %Y') }}
-                                </span>
-                                <span class="
-                                    {% if job.status == 'active' %}bg-green-100 text-green-800
-                                    {% elif job.status == 'closed' %}bg-red-100 text-red-800
-                                    {% else %}bg-yellow-100 text-yellow-800{% endif %}
-                                    text-xs px-2 py-1 rounded">
-                                    {{ job.status|capitalize }}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <a href="{{ url_for('##', job_id=job.id) }}" class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{{ url_for('##', job_id=job.id) }}" class="text-red-600 hover:text-red-800" 
-                               onclick="return confirm('Are you sure you want to delete this job?');">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                            <a href="{{ url_for('##', job_id=job.id) }}" class="text-purple-600 hover:text-purple-800">
-                                <i class="fas fa-users"></i>
-                                <span class="text-xs">{{ job.applications_count }}</span>
-                            </a>
-                        </div>
+                <div class="gradient-border bg-white p-6 card-hover fade-in-up shadow-sm" 
+                     style="animation-delay: {{ loop.index * 0.1 }}s">
+                    <div class="flex flex-col mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 leading-tight mb-2 break-words">{{ job.job_title }}</h2>
+                        <span class="self-start px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-medium">
+                            {{ job.job_type }}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-3 text-gray-600">
+                        <p class="flex items-center">
+                            <i class="fas fa-map-marker-alt w-5 text-sky-500"></i>
+                            <span class="ml-2">{{ job.job_location }}, {{ job.job_city }}</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-dollar-sign w-5 text-sky-500"></i>
+                            <span class="ml-2">{{ job.job_salary }}</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-industry w-5 text-sky-500"></i>
+                            <span class="ml-2">{{ job.job_industry }}</span>
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                            {{ job.job_description }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        {% for skill in job.job_skills.split(',') %}
+                            <span class="px-3 py-1 bg-sky-50 text-sky-700 text-xs font-medium rounded-full hover:bg-sky-100 transition-colors duration-200">
+                                {{ skill.strip() }}
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                        <p class="text-sm text-gray-500 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Posted: {{ job.job_dop }}
+                        </p>
+                        <button class="text-sky-600 hover:text-sky-700 transition-colors duration-200">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-full text-center py-16 fade-in-up">
+                    <div class="max-w-md mx-auto">
+                        <i class="fas fa-clipboard-list text-6xl text-gray-300 mb-4 animate-float"></i>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">No jobs posted yet</h3>
+                        <p class="text-gray-600 mb-6">Create your first job posting and start finding the perfect candidates.</p>
+                        <a href="{{ url_for('Post_Jobs') }}" 
+                           class="inline-flex items-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-sky-400 to-sky-500 hover:opacity-90 transition-opacity duration-300">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            Post Your First Job
+                        </a>
                     </div>
                 </div>
             {% endfor %}
         </div>
+    </div>
 
-        <!-- Pagination -->
-        {% if pagination.pages > 1 %}
-            <div class="flex justify-center mt-6">
-                <div class="flex space-x-1">
-                    {% if pagination.has_prev %}
-                        <a href="{{ url_for('##', page=pagination.prev_num, **request.args) }}" 
-                           class="px-3 py-1 border rounded-md hover:bg-gray-100">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    {% endif %}
-                    
-                    {% for page_num in pagination.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num == pagination.page %}
-                                <span class="px-3 py-1 border rounded-md bg-blue-600 text-white">
-                                    {{ page_num }}
-                                </span>
-                            {% else %}
-                                <a href="{{ url_for('##', page=page_num, **request.args) }}" 
-                                   class="px-3 py-1 border rounded-md hover:bg-gray-100">
-                                    {{ page_num }}
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            <span class="px-3 py-1">…</span>
-                        {% endif %}
-                    {% endfor %}
-                    
-                    {% if pagination.has_next %}
-                        <a href="{{ url_for('##', page=pagination.next_num, **request.args) }}" 
-                           class="px-3 py-1 border rounded-md hover:bg-gray-100">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-    {% else %}
-        <div class="text-center py-8">
-            <div class="text-gray-400 text-5xl mb-4">
-                <i class="fas fa-folder-open"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Jobs Found</h3>
-            <p class="text-gray-500 mb-4">You haven't posted any jobs yet or none match your filter criteria.</p>
-            <a href="{{ url_for('##') }}" class="bg-blue-600 text-white py-2 px-6 rounded-md font-semibold hover:bg-blue-700 transition">
-                Post Your First Job
-            </a>
-        </div>
-    {% endif %}
-</div>
-{% endblock %}
+    <script>
+        // Add intersection observer for smooth scroll animations
+        const cards = document.querySelectorAll('.fade-in-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
