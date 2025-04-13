@@ -6,104 +6,141 @@
     <title>Candidate Dashboard | JobConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    },
+                    animation: {
+                        shimmer: 'shimmer 2s infinite',
+                        float: 'float 6s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* Custom styles */
-        .gradient-primary {
-            background: linear-gradient(to right, #3b82f6, #4f46e5);
-        }
         .card-hover {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+
         .job-card {
             border-left: 4px solid transparent;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
+
         .job-card:hover {
-            border-left-color: #3b82f6;
+            border-left-color: #0ea5e9;
         }
+
         .dropdown-animation {
             transition: all 0.3s ease;
         }
+
         .dropdown-content {
             display: none;
             opacity: 0;
             transform: translateY(-10px);
             transition: opacity 0.3s, transform 0.3s;
         }
+
         .dropdown:hover .dropdown-content {
             display: block;
             opacity: 1;
             transform: translateY(0);
         }
+
         .progress-bar-animated {
-            background: linear-gradient(-45deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+            background: linear-gradient(-45deg, #0ea5e9, #38bdf8, #7dd3fc, #0ea5e9);
             background-size: 400% 400%;
             animation: gradient 3s ease infinite;
         }
+
         @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            50% {
-                background-position: 100% 50%;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            100% {
-                background-position: 0% 50%;
-            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .bg-mesh {
+            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-size: 40px 40px;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-
+<body class="bg-mesh min-h-screen flex flex-col antialiased">
     <!-- Navbar -->
     <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
         <div class="flex items-center space-x-2">
-            <i class="fas fa-briefcase text-blue-600 text-xl"></i>
+            <i class="fas fa-briefcase text-sky-500 text-xl"></i>
             <span class="text-xl font-semibold">JobConnect</span>
         </div>
         <ul class="hidden md:flex space-x-6 font-medium">
-            <li><a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-1">Dashboard</a></li> <!-- Route: /candidate -->
-            <li><a href="{{url_for('Jobs')}}" class="hover:text-blue-600">Browse Jobs</a></li> <!-- Route: /browse-jobs -->
-            <li><a href="#" class="hover:text-blue-600">Applications</a></li> <!-- Route: /applications -->
-            <li><a href='#' class="hover:text-blue-600">Profile</a></li> <!-- Route: /profile -->
+            <li><a href="#" class="text-sky-500 border-b-2 border-sky-500 pb-1">Dashboard</a></li>
+            <li><a href="{{url_for('Jobs')}}" class="hover:text-sky-500">Browse Jobs</a></li>
+            <li><a href="{{url_for('My_applications')}}" class="hover:text-sky-500">Applications</a></li>
+            <li><a href='#' class="hover:text-sky-500">Profile</a></li>
         </ul>
         <div class="flex items-center space-x-4">
             <div class="relative dropdown">
-                <button class="flex items-center text-gray-700 hover:text-blue-600 focus:outline-none dropdown-animation">
+                <button class="flex items-center text-gray-700 hover:text-sky-500 focus:outline-none dropdown-animation">
                     <span class="font-medium">Candidate</span>
                     <i class="fas fa-chevron-down ml-2 text-xs"></i>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 dropdown-content">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a> <!-- Route: /profile -->
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a> <!-- Route: /account-settings -->
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 dropdown-content border border-gray-100">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Your Profile</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
                     <div class="border-t border-gray-100"></div>
-                    <a href="{{url_for('logout')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                    <a href="{{url_for('logout')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Sign out</a>
                 </div>
             </div>
-            
         </div>
     </nav>
 
-    <!-- Mobile Menu Button (only visible on mobile) -->
+    <!-- Mobile Menu -->
     <div class="md:hidden bg-white border-t border-gray-200 fixed bottom-0 w-full z-10">
         <div class="flex justify-around py-2">
-            <a href="#" class="text-blue-600 flex flex-col items-center"> <!-- Route: /candidate -->
+            <a href="#" class="text-sky-500 flex flex-col items-center">
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">Home</span>
             </a>
-            <a href=""{{url_for('Jobs')}}""    class="text-gray-600 flex flex-col items-center"> <!-- Route: /browse-jobs -->
+            <a href="{{url_for('Jobs')}}" class="text-gray-600 flex flex-col items-center">
                 <i class="fas fa-search text-xl"></i>
                 <span class="text-xs mt-1">Jobs</span>
             </a>
-            <a href="#" class="text-gray-600 flex flex-col items-center"> <!-- Route: /applications -->
+            <a href="{{url_for('My_applications')}}" class="text-gray-600 flex flex-col items-center">
                 <i class="fas fa-file-alt text-xl"></i>
                 <span class="text-xs mt-1">Applications</span>
             </a>
-            <a href="#" class="text-gray-600 flex flex-col items-center"> <!-- Route: /profile -->
+            <a href="#" class="text-gray-600 flex flex-col items-center">
                 <i class="fas fa-user text-xl"></i>
                 <span class="text-xs mt-1">Profile</span>
             </a>
@@ -115,7 +152,7 @@
         {% if messages %}
             <div class="container mx-auto px-4 mt-4">
                 {% for category, message in messages %}
-                    <div class="{% if category == 'error' or category == 'warning' %}bg-red-100 border-l-4 border-red-500 text-red-700{% else %}bg-green-100 border-l-4 border-green-500 text-green-700{% endif %} p-4 mb-4 rounded-md">
+                    <div class="{% if category == 'error' or category == 'warning' %}bg-red-100 border-l-4 border-red-500 text-red-700{% else %}bg-green-100 border-l-4 border-green-500 text-green-700{% endif %} p-4 mb-4 rounded-xl">
                         <div class="flex">
                             <div class="flex-shrink-0">
                                 <i class="fas fa-{% if category == 'error' or category == 'warning' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
@@ -136,44 +173,50 @@
     <!-- Content Section -->
     <main class="container mx-auto p-4 md:p-6 mb-16 md:mb-0">
         <!-- Welcome Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.1s">
             <div class="flex flex-col md:flex-row md:items-center justify-between">
                 <div class="mb-4 md:mb-0">
-                    <h1 class="text-2xl font-bold text-gray-800">Welcome back, Candidate!</h1>
+                    <h1 class="text-2xl md:text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-sky-600">Welcome back, Candidate!</h1>
                     <p class="text-gray-600 mt-1">Here's what's happening with your job search today.</p>
                 </div>
                 <div class="flex space-x-3">
-                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-300">Find Jobs</a> <!-- Route: /browse-jobs -->
+                    <a href="#" class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden">
+                        <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
+                        <span class="relative flex items-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Find Jobs
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- Profile Completion Bar -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.2s">
             <div class="flex justify-between items-center mb-2">
-                <h2 class="text-lg font-semibold text-gray-800">Profile Completion</h2>
-                <span class="text-blue-600 font-semibold">30%</span>
+                <h2 class="text-lg font-semibold text-gray-900">Profile Completion</h2>
+                <span class="text-sky-500 font-semibold">30%</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2 overflow-hidden">
+            <div class="w-full bg-gray-100 rounded-full h-2.5 mb-2 overflow-hidden">
                 <div class="progress-bar-animated h-2.5 rounded-full" style="width: 30%"></div>
             </div>
             <div class="flex justify-between items-center text-sm">
                 <p class="text-gray-600">Complete your profile to increase your chances of getting hired.</p>
-                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium ml-4 whitespace-nowrap">
-                    Complete Now <i class="fas fa-arrow-right ml-1"></i>
-                </a> <!-- Route: /profile -->
+                <a href="#" class="text-sky-500 hover:text-sky-600 font-medium ml-4 whitespace-nowrap group">
+                    Complete Now <i class="fas fa-arrow-right ml-1 group-hover:transform group-hover:translate-x-1 transition-transform"></i>
+                </a>
             </div>
         </div>
 
         <!-- Stats Section -->
-        <div class="bg-white rounded-xl shadow-sm p-6 card-hover mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 card-hover mb-8 fade-in-up border border-gray-200" style="animation-delay: 0.3s">
             <div class="flex items-center">
-                <div class="rounded-full bg-green-100 p-3 mr-4">
-                    <i class="fas fa-file-alt text-green-600"></i>
+                <div class="rounded-full bg-sky-100 p-3 mr-4">
+                    <i class="fas fa-file-alt text-sky-500"></i>
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm">Applications</p>
-                    <h3 class="text-2xl font-bold text-gray-800">0</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">0</h3>
                 </div>
             </div>
             <div class="mt-4 text-sm text-gray-500 flex items-center">
@@ -181,33 +224,39 @@
             </div>
         </div>
 
-        <!-- Two Column Layout for Desktop -->
+        <!-- Two Column Layout -->
         <div class="flex flex-col lg:flex-row gap-8">
             <!-- Left Column -->
             <div class="lg:w-2/3">
                 <!-- Recent Applications -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.4s">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">Recent Applications</h2>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a> <!-- Route: /applications -->
+                        <h2 class="text-xl font-bold text-gray-900">Recent Applications</h2>
+                        <a href="#" class="text-sky-500 hover:text-sky-600 text-sm font-medium">View All</a>
                     </div>
                     
-                    <!-- No applications yet message -->
+                    <!-- No applications message -->
                     <div class="text-center py-8">
                         <div class="text-gray-400 mb-3">
-                            <i class="fas fa-file-alt text-4xl"></i>
+                            <i class="fas fa-file-alt text-4xl animate-float"></i>
                         </div>
                         <h3 class="text-gray-700 font-medium mb-1">No applications yet</h3>
-                        <p class="text-gray-500 text-sm">Start applying to jobs to see your applications here</p>
-                        <a href="#" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-300">Browse Jobs</a> <!-- Route: /browse-jobs -->
+                        <p class="text-gray-500 text-sm mb-6">Start applying to jobs to see your applications here</p>
+                        <a href="#" class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden inline-flex items-center">
+                            <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
+                            <span class="relative flex items-center">
+                                <i class="fas fa-search mr-2"></i>
+                                Browse Jobs
+                            </span>
+                        </a>
                     </div>
                 </div>
                 
                 <!-- Recommended Jobs -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.5s">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">Recommended Jobs</h2>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View All</a> <!-- Route: /browse-jobs -->
+                        <h2 class="text-xl font-bold text-gray-900">Recommended Jobs</h2>
+                        <a href="#" class="text-sky-500 hover:text-sky-600 text-sm font-medium">View All</a>
                     </div>
                     
                     <div class="space-y-4">
@@ -215,18 +264,18 @@
                         <div class="job-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
                             <div class="flex items-start">
                                 <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800">Full Stack Developer</h3>
+                                    <h3 class="font-semibold text-gray-900">Full Stack Developer</h3>
                                     <p class="text-gray-600 text-sm">TechCorp • Boston, MA</p>
                                     <div class="flex flex-wrap gap-2 mt-2">
-                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Full-time</span>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Remote</span>
-                                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">$120K-$150K</span>
+                                        <span class="bg-sky-100 text-sky-700 text-xs px-2 py-1 rounded-full">Full-time</span>
+                                        <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Remote</span>
+                                        <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">$120K-$150K</span>
                                     </div>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-gray-500 text-sm">Posted 2 days ago</p>
                                     <div class="flex mt-2 space-x-2 justify-end">
-                                        <a href="#" class="text-blue-600 hover:text-blue-800 transition duration-300" title="View Job"> <!-- Route: /job/1 -->
+                                        <a href="#" class="text-sky-500 hover:text-sky-600 transition duration-300" title="View Job">
                                             <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </div>
@@ -238,17 +287,17 @@
                         <div class="job-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
                             <div class="flex items-start">
                                 <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800">Product Manager</h3>
+                                    <h3 class="font-semibold text-gray-900">Product Manager</h3>
                                     <p class="text-gray-600 text-sm">InnovateTech • Seattle, WA</p>
                                     <div class="flex flex-wrap gap-2 mt-2">
-                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Full-time</span>
-                                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">$130K-$160K</span>
+                                        <span class="bg-sky-100 text-sky-700 text-xs px-2 py-1 rounded-full">Full-time</span>
+                                        <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">$130K-$160K</span>
                                     </div>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-gray-500 text-sm">Posted 1 week ago</p>
                                     <div class="flex mt-2 space-x-2 justify-end">
-                                        <a href="#" class="text-blue-600 hover:text-blue-800 transition duration-300" title="View Job"> <!-- Route: /job/2 -->
+                                        <a href="#" class="text-sky-500 hover:text-sky-600 transition duration-300" title="View Job">
                                             <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </div>
@@ -262,30 +311,30 @@
             <!-- Right Column -->
             <div class="lg:w-1/3">
                 <!-- Quick Links -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Links</h2>
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.6s">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Links</h2>
                     <ul class="space-y-2">
                         <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300"> <!-- Route: /profile -->
-                                <i class="fas fa-user text-purple-500 mr-3 w-5 text-center"></i>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
+                                <i class="fas fa-user text-sky-500 mr-3 w-5 text-center"></i>
                                 <span>Complete Profile</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300"> <!-- Route: /job-alerts -->
-                                <i class="fas fa-bell text-blue-500 mr-3 w-5 text-center"></i>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
+                                <i class="fas fa-bell text-sky-500 mr-3 w-5 text-center"></i>
                                 <span>Job Alerts</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300"> <!-- Route: /account-settings -->
-                                <i class="fas fa-cog text-gray-500 mr-3 w-5 text-center"></i>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
+                                <i class="fas fa-cog text-sky-500 mr-3 w-5 text-center"></i>
                                 <span>Account Settings</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300"> <!-- Route: /help-support -->
-                                <i class="fas fa-question-circle text-green-500 mr-3 w-5 text-center"></i>
+                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
+                                <i class="fas fa-question-circle text-sky-500 mr-3 w-5 text-center"></i>
                                 <span>Help & Support</span>
                             </a>
                         </li>
@@ -296,7 +345,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 mt-auto">
+    <footer class="bg-gray-900 text-white py-8 mt-auto">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="mb-6 md:mb-0">
@@ -307,35 +356,48 @@
                     <div>
                         <h4 class="text-lg font-semibold mb-3">For Job Seekers</h4>
                         <ul class="space-y-2 text-sm text-gray-400">
-                            <li><a href="#" class="hover:text-white">Browse Jobs</a></li> <!-- Route: /browse-jobs -->
-                            <li><a href="#" class="hover:text-white">Job Alerts</a></li> <!-- Route: /job-alerts -->
-                            <li><a href="#" class="hover:text-white">Career Advice</a></li> <!-- Route: /career-advice -->
+                            <li><a href="#" class="hover:text-sky-400">Browse Jobs</a></li>
+                            <li><a href="#" class="hover:text-sky-400">Job Alerts</a></li>
+                            <li><a href="#" class="hover:text-sky-400">Career Advice</a></li>
                         </ul>
                     </div>
                     <div>
                         <h4 class="text-lg font-semibold mb-3">For Employers</h4>
                         <ul class="space-y-2 text-sm text-gray-400">
-                            <li><a href="#" class="hover:text-white">Post a Job</a></li> <!-- Route: /post-job -->
-                            <li><a href="#" class="hover:text-white">Browse Candidates</a></li> <!-- Route: /browse-candidates -->
-                            <li><a href="#" class="hover:text-white">Pricing Plans</a></li> <!-- Route: /pricing-plans -->
-                            <li><a href="#" class="hover:text-white">Recruitment Solutions</a></li> <!-- Route: /recruitment-solutions -->
+                            <li><a href="#" class="hover:text-sky-400">Post a Job</a></li>
+                            <li><a href="#" class="hover:text-sky-400">Browse Candidates</a></li>
+                            <li><a href="#" class="hover:text-sky-400">Pricing Plans</a></li>
+                            <li><a href="#" class="hover:text-sky-400">Recruitment Solutions</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+            <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
                 <p>&copy; 2023 JobConnect. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript for interactions -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Dashboard loaded successfully');
-            
-            // You can add more JavaScript functionality here
-            // For example, AJAX calls to fetch job recommendations, etc.
+            // Add intersection observer for smooth scroll animations
+            const cards = document.querySelectorAll('.fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                observer.observe(card);
+            });
         });
     </script>
 </body>

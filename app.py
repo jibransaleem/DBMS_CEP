@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
+from sqlalchemy.orm import joinedload
 app = Flask(__name__, template_folder='templates' , static_folder="static" ,static_url_path="/")
 app.config.from_object(Config)
 db.init_app(app)
@@ -218,7 +219,7 @@ def View_Jobs():
 
 @app.route("/jobs")
 def Jobs():
-    job = JobPosting.query.filter_by(job_status = "open").all()
+    job = JobPosting.query.all()
     return render_template("jobs.html", jobs=job)
     
 @app.route("/applyjob/ <int:job_id> ", methods=['GET', 'POST'])
@@ -273,8 +274,15 @@ def submit_application(job_id):
     flash('Error: Please check your form inputs', 'error')
     return redirect(url_for("apply_job" , job_id = job_id))
 
-    
-    
+@app.route("/Myapplications")
+def My_applications(): 
+    applied_jobs = db.session.query(JobPosting, JobApplication, Company).\
+    join(JobApplication, JobPosting.job_id == JobApplication.job_id).\
+    join(Company, JobPosting.company_id == Company.id).\
+    filter(JobApplication.candidate_id == session['user_id']).\
+    all()
+
+    return render_template('myjobs.html', data = applied_jobs)    
 # ------------------ RUN APP ------------------
 
 if __name__ == '__main__':
