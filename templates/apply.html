@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for {{ job.job_title }} | JobConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        },
+                        pulse: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.03)' }
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    },
+                    animation: {
+                        float: 'float 5s ease-in-out infinite',
+                        pulse: 'pulse 3s ease-in-out infinite',
+                        slideIn: 'slideIn 0.5s ease-out forwards'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Card Hover Effects */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Gradient Border */
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 1.1rem;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.7s ease-out forwards;
+        }
+
+        /* Background Mesh */
+        .bg-mesh {
+            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-size: 40px 40px;
+            background-color: #f9fafb;
+        }
+
+        /* Status Colors */
+        .status-open {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            color: white;
+        }
+        .status-closed {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+            color: white;
+        }
+        .status-deadline {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            color: white;
+        }
+
+        /* Form Styling */
+        .form-container {
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+        }
+        .form-container:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .input-group:focus-within {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+        .input-group input,
+        .input-group input[type="file"] {
+            transition: all 0.2s ease;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .submit-btn {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            color: white;
+            border-radius: 9999px;
+            padding: 0.75rem 2.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #60a5fa, #93c5fd);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .skill-tag {
+            transition: all 0.2s ease;
+        }
+        .skill-tag:hover {
+            background-color: #dbeafe;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .max-w-4xl {
+                padding: 0 1rem;
+            }
+            .job-card {
+                padding: 1.5rem;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen p-8 antialiased">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="fade-in-up mb-12">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 flex items-center gap-4">
+                <i class="fas fa-briefcase text-blue-500 animate-pulse"></i>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
+                    Apply for {{ job.job_title }}
+                </span>
+            </h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-2xl">
+                Submit your details and resume to seize this exciting opportunity with {{ job.company_name }}.
+            </p>
+        </header>
+        <div class="max-w-4xl mx-auto mt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="space-y-4">
+                        {% for category, message in messages %}
+                        <div class="p-4 rounded-lg border
+                            {% if category == 'warning' %}
+                                bg-red-100 text-red-800 border-red-200
+                            {% else %}
+                                bg-green-100 text-green-800 border-green-200
+                            {% endif %}">
+                            <p class="font-semibold">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Job Card -->
+        <div class="gradient-border bg-white p-6 sm:p-8 card-hover rounded-xl mb-10 job-card animate-slideIn" style="animation-delay: 0.1s;">
+            <div class="flex flex-col mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-3 break-words">{{ job.job_title }}</h2>
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                        {{ job.job_type }}
+                    </span>
+                    <span class="text-sm font-medium text-gray-500">{{ job.company_name }}</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600 mb-6">
+                <p class="flex items-center">
+                    <i class="fas fa-map-marker-alt w-6 text-blue-500 mr-2"></i>
+                    <span>{{ job.job_location }}</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-dollar-sign w-6 text-blue-500 mr-2"></i>
+                    <span>{{ job.job_salary }}</span>
+                </p>
+                <p class="flex items-center">
+                    <i class="fas fa-industry w-6 text-blue-500 mr-2"></i>
+                    <span>{{ job.job_industry }}</span>
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Description</h3>
+                <p class="text-gray-600 leading-relaxed">{{ job.job_description }}</p>
+            </div>
+
+            <!-- Job Status and Deadline -->
+            <div class="flex flex-wrap items-center gap-4 mb-6">
+                <span class="px-4 py-1.5 rounded-full text-xs font-semibold 
+                            {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
+                    {{ job.job_status | capitalize }}
+                </span>
+                <p class="text-sm text-gray-500 flex items-center">
+                    <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+                    Deadline: {{ job.job_deadline }}
+                </p>
+            </div>
+
+            <!-- Skills -->
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Required Skills</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for skill in job.job_skills.split(',') %}
+                        <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-full skill-tag">
+                            {{ skill.strip() }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="form-container bg-white rounded-xl shadow-sm p-6 sm:p-8 animate-slideIn" style="animation-delay: 0.3s;">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Submit Your Application</h2>
+            <form method="POST" action="{{ url_for('submit_application', job_id=job.job_id) }}" enctype="multipart/form-data" class="space-y-6">
+                {{ form.hidden_tag() }}
+        
+        
+                <!-- Resume Upload -->
+                <div class="input-group border border-gray-200 rounded-lg bg-gray-50 p-4">
+                    <label for="resume" class="block text-sm font-medium text-gray-700 mb-2">Upload Resume</label>
+                    {{ form.resume(class_='block w-full text-gray-700 text-sm') }}
+                </div>
+                {% if form.resume.errors %}
+                    <p class="text-red-500 text-xs mt-1">{{ form.resume.errors[0] }}</p>
+                {% endif %}
+        
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    {{ form.submit(class_='submit-btn') }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for Animations
+        const elements = document.querySelectorAll('.animate-slideIn');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        elements.forEach(el => {
+            el.classList.add('opacity-0', 'translate-y-6');
+            observer.observe(el);
+        });
+
+        // Smooth Scroll for Anchor Links (if any)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

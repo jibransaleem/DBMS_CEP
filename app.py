@@ -1,17 +1,19 @@
 from flask import Flask, render_template, redirect, url_for, session, flash, request
-from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm
+from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm , JobApplicationForm
 import bcrypt
-from models import db, Config, Candidate, Company ,JobPosting
-from datetime import datetime
+from models import db, Config, Candidate, Company ,JobPosting , JobApplication
+from datetime import datetime 
+import os
+from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
-
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates' , static_folder="static" ,static_url_path="/")
 app.config.from_object(Config)
 db.init_app(app)
-migrate = Migrate(app, db)
+
 with app.app_context():
     db.create_all()
 
+migrate = Migrate(app, db)
 # ------------------ SIGNUP ROUTE ------------------
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -96,22 +98,18 @@ def login():
         email = form.email.data
         password = form.password.data
         role = form.Role.data
-
         if role == 'Company':
             user = Company.query.filter_by(company_email=email).first()
             key = user.company_password
         else:
             user = Candidate.query.filter_by(email=email).first()
             key = user.password
-        if user is None or key is None:
+        if not bcrypt.checkpw(password.encode("utf-8"), key.encode("utf-8")): 
+            flash("Incorrect Password!", "warning") # email login issue shi krna ha 
+            return redirect(url_for("login"))
+        if user is None :
             flash("User not found!", "danger")
             return redirect(url_for("login"))
-
-        
-        if not bcrypt.checkpw(password.encode("utf-8"), key.encode("utf-8")):
-            flash("Incorrect Password!", "warning")
-            return redirect(url_for("login"))
-
         session['user_id'] = user.id
         session['Role'] = role
         return redirect(url_for("candidate" if role == "Candidate" else "company"))
@@ -220,8 +218,62 @@ def View_Jobs():
 
 @app.route("/jobs")
 def Jobs():
-    job = JobPosting.query.all()
+    job = JobPosting.query.filter_by(job_status = "open").all()
     return render_template("jobs.html", jobs=job)
+    
+@app.route("/applyjob/ <int:job_id> ", methods=['GET', 'POST'])
+def apply_job(job_id):
+    form = JobApplicationForm()
+    job = JobPosting.query.filter_by(job_id=job_id).first()
+    if not job:
+        flash('Job not found!', 'error')
+        return redirect(url_for('jobs'))
+    return render_template("apply.html", job=job , form= form)
+
+@app.route("/submit_application/<int:job_id>", methods=["POST"])
+def submit_application(job_id):
+    form = JobApplicationForm()
+    if form.validate_on_submit():
+        candidate_id = session['user_id']
+        existing_application = JobApplication.query.filter_by(job_id=job_id, candidate_id=candidate_id).first()
+        if existing_application :
+            flash('You have already Applied for the Job !', 'warning')
+            return redirect(url_for("apply_job" , job_id = job_id))
+        file = form.resume.data
+        file_name = secure_filename(file.filename)  # Corrected to use file.filename
+        upload_folder = os.path.join(app.root_path, 'static', 'resumes')
+        os.makedirs(upload_folder, exist_ok=True)  # if folder exists, don't make it
+        file_path = os.path.join(upload_folder, file_name)
+        file.save(file_path)
+        
+        # External URL for the uploaded resume
+        url = url_for('static', filename=f'resumes/{file_name}', _external=True)
+        
+        company_id = JobPosting.query.filter_by(job_id=job_id).first().company_id
+        current_time = datetime.now()
+        apply_date = current_time.strftime("%Y-%m-%d")
+        
+        # Create a new job application entry in the database
+        data = JobApplication(
+            resume_url=url,
+            company_id=company_id,
+            candidate_id=candidate_id,
+            apply_date=apply_date ,
+            job_id = job_id
+            
+        )
+        db.session.add(data)
+        db.session.commit()
+
+        # Flash success message and redirect to job details page
+        flash('Application submitted successfully!', 'success')
+        return redirect(url_for("apply_job" , job_id = job_id))
+
+    # Handle case where form validation fails (if necessary)
+    flash('Error: Please check your form inputs', 'error')
+    return redirect(url_for("apply_job" , job_id = job_id))
+
+    
     
 # ------------------ RUN APP ------------------
 

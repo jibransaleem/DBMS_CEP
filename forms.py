@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TelField, EmailField, SubmitField, PasswordField, SelectField , TextAreaField,DateField
+from wtforms import StringField, TelField, EmailField, SubmitField, PasswordField, SelectField , TextAreaField,DateField, FileField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
-
-
+from flask_wtf.file import FileAllowed
 class JobSeekerForm(FlaskForm):
     name = StringField('Full Name', validators=[
         DataRequired(message="Please enter your full name"),
@@ -148,3 +147,6 @@ class JobPostForm(FlaskForm):
     )
     
     submit = SubmitField('Post Job')
+class JobApplicationForm(FlaskForm):
+    resume = FileField('Upload Resume', validators=[DataRequired(), FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
+    submit = SubmitField('Submit Application')

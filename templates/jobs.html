@@ -18,56 +18,54 @@
                         pulse: {
                             '0%, 100%': { transform: 'scale(1)' },
                             '50%': { transform: 'scale(1.03)' }
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     },
                     animation: {
                         float: 'float 5s ease-in-out infinite',
-                        pulse: 'pulse 3s ease-in-out infinite'
+                        pulse: 'pulse 3s ease-in-out infinite',
+                        slideIn: 'slideIn 0.5s ease-out forwards'
                     }
                 }
             }
         }
     </script>
     <style>
+        /* Card Hover Effects */
         .card-hover {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
         .card-hover:hover {
             transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
+        /* Gradient Border */
         .gradient-border {
             position: relative;
             border-radius: 1rem;
             border: 1px solid #e5e7eb;
+            overflow: hidden;
         }
-
         .gradient-border::before {
             content: '';
             position: absolute;
             inset: -3px;
             border-radius: 1.1rem;
-            background: linear-gradient(
-                45deg,
-                #3b82f6,
-                #60a5fa,
-                #93c5fd,
-                #3b82f6
-            );
-            mask: 
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
+            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask-composite: exclude;
             opacity: 0;
             transition: opacity 0.4s ease;
         }
-
         .gradient-border:hover::before {
             opacity: 1;
         }
 
+        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -78,126 +76,185 @@
                 transform: translateY(0);
             }
         }
-
         .fade-in-up {
             animation: fadeInUp 0.7s ease-out forwards;
         }
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out forwards;
+        }
 
+        /* Background Mesh */
         .bg-mesh {
             background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
-            background-size: 50px 50px;
+            background-size: 40px 40px;
+            background-color: #f9fafb;
         }
 
+        /* Status Colors */
         .status-open {
-            background-color: #10b981;
+            background: linear-gradient(90deg, #10b981, #34d399);
             color: white;
         }
-
         .status-closed {
-            background-color: #ef4444;
+            background: linear-gradient(90deg, #ef4444, #f87171);
             color: white;
         }
-
         .status-deadline {
-            background-color: #f59e0b;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
             color: white;
         }
 
-        .apply-btn {
-            background-color: #3b82f6;
-            color: white;
-            border-radius: 9999px;
-            padding: 0.6rem 2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .apply-btn:hover {
-            background-color: #60a5fa;
-            transform: translateY(-2px);
-        }
-
+        /* Search and Filter */
         .search-bar {
             transition: all 0.3s ease;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
         }
-
         .search-bar:focus-within {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
         }
-
         .filter-btn {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            color: white;
             transition: all 0.3s ease;
         }
-
         .filter-btn:hover {
-            background-color: #f3f4f6;
+            background: linear-gradient(90deg, #60a5fa, #93c5fd);
+            transform: translateY(-1px);
         }
-
         .filter-option {
             transition: all 0.2s ease;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
         }
-
         .filter-option:focus {
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+
+        /* Apply Button */
+        .apply-btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        .apply-btn:hover {
+            background-color: #2563eb;
+        }
+
+        /* Skill Tags */
+        .skill-tag {
+            transition: all 0.2s ease;
+        }
+        .skill-tag:hover {
+            background-color: #dbeafe;
+            transform: scale(1.05);
+        }
+
+        /* Pagination */
+        .pagination-btn {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .pagination-btn:hover {
+            background: linear-gradient(90deg, #1d4ed8, #2563eb);
+            transform: translateY(-1px);
+        }
+        .pagination-btn.disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .max-w-7xl {
+                padding: 0 1rem;
+            }
+            .job-card {
+                padding: 1.5rem;
+            }
+            .search-bar {
+                padding: 0.5rem;
+            }
+            .filter-btn {
+                padding: 0.5rem 1rem;
+            }
+            .filter-options {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body class="bg-mesh min-h-screen p-8 antialiased">
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 space-y-6 sm:space-y-0">
-            <div class="fade-in-up">
-                <h1 class="text-5xl font-extrabold text-gray-900 flex items-center group">
-                    <i class="fas fa-briefcase text-blue-500 mr-4 group-hover:animate-pulse"></i>
+        <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 space-y-6 sm:space-y-0 animate-slideIn">
+            <div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 flex items-center gap-4">
+                    <i class="fas fa-briefcase text-blue-500 animate-pulse"></i>
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
-                        Find Your Next Job
+                        Discover Your Dream Job
                     </span>
                 </h1>
-                <p class="mt-3 text-gray-600 text-lg max-w-2xl">
-                    Discover opportunities that match your skills and goals
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl">
+                    Connect with opportunities that match your skills and aspirations.
                 </p>
             </div>
-        </div>
+            <a href="/profile" class="filter-btn px-6 py-3 rounded-lg font-semibold flex items-center">
+                <i class="fas fa-user mr-2"></i> My Profile
+            </a>
+        </header>
 
         <!-- Search and Filter Section -->
-        <div class="mb-10 bg-white rounded-xl shadow-sm p-6 fade-in-up">
+        <div class="mb-10 bg-white rounded-xl shadow-sm p-6 animate-slideIn" style="animation-delay: 0.1s;">
             <div class="flex flex-col sm:flex-row gap-4">
                 <!-- Search Bar -->
-                <div class="flex-1 search-bar bg-gray-50 rounded-lg flex items-center px-4">
+                <div class="flex-1 search-bar border border-gray-200 rounded-lg flex items-center px-4 py-3">
                     <i class="fas fa-search text-gray-400 mr-3"></i>
-                    <input type="text" placeholder="Search jobs by title, company, or location..." 
-                           class="w-full bg-transparent py-3 outline-none text-gray-700"
+                    <input type="text" placeholder="Search jobs by title, company, or location..."
+                           class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
                            id="jobSearch">
                 </div>
                 <!-- Filter Toggle Button -->
-                <button class="filter-btn bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium flex items-center hover:bg-gray-200"
+                <button class="filter-btn px-6 py-3 rounded-lg font-semibold flex items-center"
                         id="filterToggle">
                     <i class="fas fa-filter mr-2"></i> Filter Jobs
                 </button>
             </div>
-            <!-- Filter Options (Hidden by default) -->
-            <div id="filterOptions" class="hidden mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+            <!-- Filter Options -->
+            <div id="filterOptions" class="hidden mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 filter-options">
+                <select class="filter-option rounded-lg p-3">
                     <option value="">Job Type</option>
                     <option value="full-time">Full-Time</option>
                     <option value="part-time">Part-Time</option>
                     <option value="contract">Contract</option>
                     <option value="internship">Internship</option>
                 </select>
-                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                <select class="filter-option rounded-lg p-3">
                     <option value="">Location</option>
                     <option value="remote">Remote</option>
                     <option value="onsite">Onsite</option>
                     <option value="hybrid">Hybrid</option>
                 </select>
-                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                <select class="filter-option rounded-lg p-3">
                     <option value="">Industry</option>
                     <option value="tech">Technology</option>
                     <option value="finance">Finance</option>
                     <option value="healthcare">Healthcare</option>
                     <option value="education">Education</option>
                 </select>
-                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                <select class="filter-option rounded-lg p-3">
                     <option value="">Experience Level</option>
                     <option value="entry">Entry Level</option>
                     <option value="mid">Mid Level</option>
@@ -207,117 +264,142 @@
         </div>
 
         <!-- Job Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for job in jobs %}
-                <div class="gradient-border bg-white p-6 card-hover fade-in-up rounded-xl" 
-                     style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="gradient-border bg-white p-6 card-hover rounded-xl job-card animate-slideIn"
+                     style="animation-delay: {{ loop.index * 0.1 }}s;">
                     <div class="flex flex-col mb-5">
                         <h2 class="text-2xl font-bold text-gray-900 leading-tight mb-2 break-words">{{ job.job_title }}</h2>
-                        <div class="flex items-center gap-3">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
                                 {{ job.job_type }}
                             </span>
-                            <span class="text-sm text-gray-500">{{ job.company_name }}</span>
+                            <span class="text-sm font-medium text-gray-500">{{ job.company_name }}</span>
                         </div>
                     </div>
-                    
-                    <div class="space-y-4 text-gray-600">
+
+                    <div class="space-y-3 text-gray-600">
                         <p class="flex items-center">
-                            <i class="fas fa-map-marker-alt w-5 text-blue-500"></i>
-                            <span class="ml-2">{{ job.job_location }}, {{ job.job_city }}</span>
+                            <i class="fas fa-map-marker-alt w-5 text-blue-500 mr-2"></i>
+                            <span>
+                                {{ job.job_location }}
+                                {% if job.job_city %}
+                                    , {{ job.job_city }}
+                                {% endif %}
+                            </span>
                         </p>
                         <p class="flex items-center">
-                            <i class="fas fa-dollar-sign w-5 text-blue-500"></i>
-                            <span class="ml-2">{{ job.job_salary }}</span>
+                            <i class="fas fa-dollar-sign w-5 text-blue-500 mr-2"></i>
+                            <span>{{ job.job_salary }}</span>
                         </p>
                         <p class="flex items-center">
-                            <i class="fas fa-industry w-5 text-blue-500"></i>
-                            <span class="ml-2">{{ job.job_industry }}</span>
+                            <i class="fas fa-industry w-5 text-blue-500 mr-2"></i>
+                            <span>{{ job.job_industry }}</span>
                         </p>
                     </div>
 
-                    <div class="mt-5">
+                    <div class="mt-4">
                         <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">
                             {{ job.job_description }}
                         </p>
                     </div>
 
-                    <!-- Job status and deadline -->
-                    <div class="mt-5">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium 
-                                    {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
+                    <!-- Job Status and Deadline -->
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                    {% if job.job_status == 'open' %} status-open
+                                    {% elif job.job_status == 'closed' %} status-closed
+                                    {% else %} status-deadline {% endif %}">
                             {{ job.job_status | capitalize }}
                         </span>
-                        <p class="mt-2 text-sm text-gray-500">
+                        <p class="text-sm text-gray-500 flex items-center">
                             <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
                             Deadline: {{ job.job_deadline }}
                         </p>
                     </div>
 
+                    <!-- Skills -->
                     <div class="flex flex-wrap gap-2 mt-4">
                         {% for skill in job.job_skills.split(',') %}
-                            <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full hover:bg-blue-100 transition-colors duration-200">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full skill-tag">
                                 {{ skill.strip() }}
                             </span>
                         {% endfor %}
                     </div>
 
-                    <div class="mt-6 pt-5 border-t border-gray-100 flex justify-end">
-                        <button class="apply-btn">
+                    <!-- Apply Button -->
+                    <div class="mt-6">
+                        <a href="{{url_for('apply_job', job_id = job.job_id) }}" class="apply-btn">
                             Apply Now
-                        </button>
+                        </a>
                     </div>
                 </div>
             {% else %}
-                <div class="col-span-full text-center py-20 fade-in-up">
+                <div class="col-span-full text-center py-20 animate-slideIn">
                     <div class="max-w-md mx-auto">
                         <i class="fas fa-clipboard-list text-7xl text-gray-300 mb-4 animate-float"></i>
                         <h3 class="text-3xl font-bold text-gray-900 mb-3">No Jobs Found</h3>
                         <p class="text-gray-600 mb-6">Try adjusting your search or filters to find opportunities.</p>
+                        <a href="/" class="filter-btn px-6 py-3 rounded-lg font-semibold inline-flex items-center">
+                            <i class="fas fa-redo-alt mr-2"></i> Reset Filters
+                        </a>
                     </div>
                 </div>
             {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        {% if jobs and jobs|length > 0 %}
+            <div class="mt-12 flex justify-center items-center gap-4 animate-slideIn">
+                <button class="pagination-btn disabled" id="prevPage">
+                    <i class="fas fa-chevron-left mr-2"></i> Previous
+                </button>
+                <span class="text-gray-600 font-medium">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                <button class="pagination-btn" id="nextPage">
+                    Next <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        {% endif %}
     </div>
 
     <script>
-        // Intersection observer for animations
-        const cards = document.querySelectorAll('.fade-in-up');
+        // Intersection Observer for Animations
+        const elements = document.querySelectorAll('.animate-slideIn');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
                 }
             });
         }, {
-            threshold: 0.2
+            threshold: 0.1
         });
 
-        cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            observer.observe(card);
+        elements.forEach(el => {
+            el.classList.add('opacity-0', 'translate-y-6');
+            observer.observe(el);
         });
 
-        // Toggle filter options
+        // Toggle Filter Options
         const filterToggle = document.getElementById('filterToggle');
         const filterOptions = document.getElementById('filterOptions');
         filterToggle.addEventListener('click', () => {
             filterOptions.classList.toggle('hidden');
+            filterToggle.querySelector('i').classList.toggle('fa-filter');
+            filterToggle.querySelector('i').classList.toggle('fa-times');
         });
 
-        // Client-side search functionality
+        // Client-Side Search Functionality
         const searchInput = document.getElementById('jobSearch');
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const jobCards = document.querySelectorAll('.card-hover');
-            
+            const jobCards = document.querySelectorAll('.job-card');
+
             jobCards.forEach(card => {
                 const title = card.querySelector('h2').textContent.toLowerCase();
-                const company = card.querySelector('.text-sm.text-gray-500')?.textContent.toLowerCase() || '';
-                const location = card.querySelector('.flex.items-center span').textContent.toLowerCase();
-                
+                const company = card.querySelector('.text-sm.font-medium.text-gray-500')?.textContent.toLowerCase() || '';
+                const location = card.querySelector('.space-y-3 p:first-child span').textContent.toLowerCase();
+
                 if (title.includes(searchTerm) || company.includes(searchTerm) || location.includes(searchTerm)) {
                     card.style.display = 'block';
                 } else {
@@ -326,34 +408,88 @@
             });
         });
 
-        // Basic filter functionality (client-side example)
+        // Client-Side Filter Functionality
         const filterSelects = document.querySelectorAll('.filter-option');
         filterSelects.forEach(select => {
             select.addEventListener('change', () => {
-                const jobCards = document.querySelectorAll('.card-hover');
+                const jobCards = document.querySelectorAll('.job-card');
                 const filters = {
-                    jobType: document.querySelector('select:nth-child(1)').value,
-                    location: document.querySelector('select:nth-child(2)').value,
-                    industry: document.querySelector('select:nth-child(3)').value,
-                    experience: document.querySelector('select:nth-child(4)').value
+                    jobType: document.querySelector('select:nth-child(1)').value.toLowerCase(),
+                    location: document.querySelector('select:nth-child(2)').value.toLowerCase(),
+                    industry: document.querySelector('select:nth-child(3)').value.toLowerCase(),
+                    experience: document.querySelector('select:nth-child(4)').value.toLowerCase()
                 };
 
                 jobCards.forEach(card => {
                     const jobType = card.querySelector('.bg-blue-100').textContent.toLowerCase();
-                    const location = card.querySelector('.flex.items-center span').textContent.toLowerCase();
-                    const industry = card.querySelector('.space-y-4 p:nth-child(3) span').textContent.toLowerCase();
-                    // Note: Experience level isn't in the job data; this is a placeholder
-                    let matches = true;
+                    const location = card.querySelector('.space-y-3 p:first-child span').textContent.toLowerCase();
+                    const industry = card.querySelector('.space-y-3 p:nth-child(3) span').textContent.toLowerCase();
 
+                    let matches = true;
                     if (filters.jobType && !jobType.includes(filters.jobType)) matches = false;
                     if (filters.location && !location.includes(filters.location)) matches = false;
                     if (filters.industry && !industry.includes(filters.industry)) matches = false;
-                    // Add experience filter logic if job data includes it
 
                     card.style.display = matches ? 'block' : 'none';
                 });
             });
         });
+
+        // Ensure Apply Buttons are Clickable
+        document.addEventListener('DOMContentLoaded', function() {
+            const applyButtons = document.querySelectorAll('.apply-btn');
+            applyButtons.forEach(button => {
+                button.style.position = 'relative';
+                button.style.zIndex = '10';
+                button.addEventListener('click', function(e) {
+                    console.log('Apply button clicked:', this.getAttribute('href'));
+                });
+            });
+        });
+
+        // Pagination (Client-Side Example)
+        const jobsPerPage = 9;
+        let currentPage = 1;
+        const jobCards = document.querySelectorAll('.job-card');
+        const totalPages = Math.ceil(jobCards.length / jobsPerPage);
+
+        function updatePagination() {
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+
+            if (totalPagesSpan) totalPagesSpan.textContent = totalPages;
+            if (currentPageSpan) currentPageSpan.textContent = currentPage;
+
+            jobCards.forEach((card, index) => {
+                const cardPage = Math.floor(index / jobsPerPage) + 1;
+                card.style.display = cardPage === currentPage ? 'block' : 'none';
+            });
+
+            if (prevBtn) prevBtn.classList.toggle('disabled', currentPage === 1);
+            if (nextBtn) nextBtn.classList.toggle('disabled', currentPage === totalPages);
+        }
+
+        if (document.getElementById('prevPage')) {
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+        }
+
+        if (document.getElementById('nextPage')) {
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+        }
+
+        if (jobCards.length > 0) updatePagination();
     </script>
 </body>
 </html>
