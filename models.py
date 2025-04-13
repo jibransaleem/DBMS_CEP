@@ -6,7 +6,7 @@ db = SQLAlchemy()
 class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql://root:Jibran123%40%23@localhost/DB'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = '12345678'
+    SECRET_KEY = '123456789'
 
 # ---------------------- Candidate Table ----------------------
 
@@ -64,3 +64,8 @@ class JobPosting(db.Model):
         nullable=False
     )
     job_dop = db.Column(db.String(30 ),  nullable = False)  
+    job_deadline = db.Column(db.Date, nullable=False)
+    job_status = db.Column(db.Enum("open", "closed"), nullable=False, default="open")
+
+class JobApplication(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)

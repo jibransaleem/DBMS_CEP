@@ -67,7 +67,7 @@
         </div>
         <ul class="hidden md:flex space-x-6 font-medium">
             <li><a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-1">Dashboard</a></li> <!-- Route: /candidate -->
-            <li><a href="#" class="hover:text-blue-600">Browse Jobs</a></li> <!-- Route: /browse-jobs -->
+            <li><a href="{{url_for('Jobs')}}" class="hover:text-blue-600">Browse Jobs</a></li> <!-- Route: /browse-jobs -->
             <li><a href="#" class="hover:text-blue-600">Applications</a></li> <!-- Route: /applications -->
             <li><a href='#' class="hover:text-blue-600">Profile</a></li> <!-- Route: /profile -->
         </ul>
@@ -95,7 +95,7 @@
                 <i class="fas fa-home text-xl"></i>
                 <span class="text-xs mt-1">Home</span>
             </a>
-            <a href="#"    class="text-gray-600 flex flex-col items-center"> <!-- Route: /browse-jobs -->
+            <a href=""{{url_for('Jobs')}}""    class="text-gray-600 flex flex-col items-center"> <!-- Route: /browse-jobs -->
                 <i class="fas fa-search text-xl"></i>
                 <span class="text-xs mt-1">Jobs</span>
             </a>

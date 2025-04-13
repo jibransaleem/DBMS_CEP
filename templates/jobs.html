@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Jobs | JobConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        },
+                        pulse: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.03)' }
+                        }
+                    },
+                    animation: {
+                        float: 'float 5s ease-in-out infinite',
+                        pulse: 'pulse 3s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 1.1rem;
+            background: linear-gradient(
+                45deg,
+                #3b82f6,
+                #60a5fa,
+                #93c5fd,
+                #3b82f6
+            );
+            mask: 
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.7s ease-out forwards;
+        }
+
+        .bg-mesh {
+            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-size: 50px 50px;
+        }
+
+        .status-open {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .status-closed {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .status-deadline {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .apply-btn {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 9999px;
+            padding: 0.6rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background-color: #60a5fa;
+            transform: translateY(-2px);
+        }
+
+        .search-bar {
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .filter-option {
+            transition: all 0.2s ease;
+        }
+
+        .filter-option:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen p-8 antialiased">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 space-y-6 sm:space-y-0">
+            <div class="fade-in-up">
+                <h1 class="text-5xl font-extrabold text-gray-900 flex items-center group">
+                    <i class="fas fa-briefcase text-blue-500 mr-4 group-hover:animate-pulse"></i>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
+                        Find Your Next Job
+                    </span>
+                </h1>
+                <p class="mt-3 text-gray-600 text-lg max-w-2xl">
+                    Discover opportunities that match your skills and goals
+                </p>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="mb-10 bg-white rounded-xl shadow-sm p-6 fade-in-up">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Search Bar -->
+                <div class="flex-1 search-bar bg-gray-50 rounded-lg flex items-center px-4">
+                    <i class="fas fa-search text-gray-400 mr-3"></i>
+                    <input type="text" placeholder="Search jobs by title, company, or location..." 
+                           class="w-full bg-transparent py-3 outline-none text-gray-700"
+                           id="jobSearch">
+                </div>
+                <!-- Filter Toggle Button -->
+                <button class="filter-btn bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium flex items-center hover:bg-gray-200"
+                        id="filterToggle">
+                    <i class="fas fa-filter mr-2"></i> Filter Jobs
+                </button>
+            </div>
+            <!-- Filter Options (Hidden by default) -->
+            <div id="filterOptions" class="hidden mt-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                    <option value="">Job Type</option>
+                    <option value="full-time">Full-Time</option>
+                    <option value="part-time">Part-Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="internship">Internship</option>
+                </select>
+                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                    <option value="">Location</option>
+                    <option value="remote">Remote</option>
+                    <option value="onsite">Onsite</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                    <option value="">Industry</option>
+                    <option value="tech">Technology</option>
+                    <option value="finance">Finance</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="education">Education</option>
+                </select>
+                <select class="border border-gray-200 rounded-lg p-3 bg-white filter-option">
+                    <option value="">Experience Level</option>
+                    <option value="entry">Entry Level</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior">Senior Level</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Job Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for job in jobs %}
+                <div class="gradient-border bg-white p-6 card-hover fade-in-up rounded-xl" 
+                     style="animation-delay: {{ loop.index * 0.1 }}s">
+                    <div class="flex flex-col mb-5">
+                        <h2 class="text-2xl font-bold text-gray-900 leading-tight mb-2 break-words">{{ job.job_title }}</h2>
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                {{ job.job_type }}
+                            </span>
+                            <span class="text-sm text-gray-500">{{ job.company_name }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 text-gray-600">
+                        <p class="flex items-center">
+                            <i class="fas fa-map-marker-alt w-5 text-blue-500"></i>
+                            <span class="ml-2">{{ job.job_location }}, {{ job.job_city }}</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-dollar-sign w-5 text-blue-500"></i>
+                            <span class="ml-2">{{ job.job_salary }}</span>
+                        </p>
+                        <p class="flex items-center">
+                            <i class="fas fa-industry w-5 text-blue-500"></i>
+                            <span class="ml-2">{{ job.job_industry }}</span>
+                        </p>
+                    </div>
+
+                    <div class="mt-5">
+                        <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                            {{ job.job_description }}
+                        </p>
+                    </div>
+
+                    <!-- Job status and deadline -->
+                    <div class="mt-5">
+                        <span class="px-3 py-1 rounded-full text-xs font-medium 
+                                    {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
+                            {{ job.job_status | capitalize }}
+                        </span>
+                        <p class="mt-2 text-sm text-gray-500">
+                            <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
+                            Deadline: {{ job.job_deadline }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        {% for skill in job.job_skills.split(',') %}
+                            <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full hover:bg-blue-100 transition-colors duration-200">
+                                {{ skill.strip() }}
+                            </span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-6 pt-5 border-t border-gray-100 flex justify-end">
+                        <button class="apply-btn">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-span-full text-center py-20 fade-in-up">
+                    <div class="max-w-md mx-auto">
+                        <i class="fas fa-clipboard-list text-7xl text-gray-300 mb-4 animate-float"></i>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-3">No Jobs Found</h3>
+                        <p class="text-gray-600 mb-6">Try adjusting your search or filters to find opportunities.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Intersection observer for animations
+        const cards = document.querySelectorAll('.fade-in-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            observer.observe(card);
+        });
+
+        // Toggle filter options
+        const filterToggle = document.getElementById('filterToggle');
+        const filterOptions = document.getElementById('filterOptions');
+        filterToggle.addEventListener('click', () => {
+            filterOptions.classList.toggle('hidden');
+        });
+
+        // Client-side search functionality
+        const searchInput = document.getElementById('jobSearch');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const jobCards = document.querySelectorAll('.card-hover');
+            
+            jobCards.forEach(card => {
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const company = card.querySelector('.text-sm.text-gray-500')?.textContent.toLowerCase() || '';
+                const location = card.querySelector('.flex.items-center span').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || company.includes(searchTerm) || location.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Basic filter functionality (client-side example)
+        const filterSelects = document.querySelectorAll('.filter-option');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', () => {
+                const jobCards = document.querySelectorAll('.card-hover');
+                const filters = {
+                    jobType: document.querySelector('select:nth-child(1)').value,
+                    location: document.querySelector('select:nth-child(2)').value,
+                    industry: document.querySelector('select:nth-child(3)').value,
+                    experience: document.querySelector('select:nth-child(4)').value
+                };
+
+                jobCards.forEach(card => {
+                    const jobType = card.querySelector('.bg-blue-100').textContent.toLowerCase();
+                    const location = card.querySelector('.flex.items-center span').textContent.toLowerCase();
+                    const industry = card.querySelector('.space-y-4 p:nth-child(3) span').textContent.toLowerCase();
+                    // Note: Experience level isn't in the job data; this is a placeholder
+                    let matches = true;
+
+                    if (filters.jobType && !jobType.includes(filters.jobType)) matches = false;
+                    if (filters.location && !location.includes(filters.location)) matches = false;
+                    if (filters.industry && !industry.includes(filters.industry)) matches = false;
+                    // Add experience filter logic if job data includes it
+
+                    card.style.display = matches ? 'block' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TelField, EmailField, SubmitField, PasswordField, SelectField , TextAreaField,DateField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 
+
 class JobSeekerForm(FlaskForm):
     name = StringField('Full Name', validators=[
         DataRequired(message="Please enter your full name"),
@@ -134,4 +135,16 @@ class JobPostForm(FlaskForm):
         ],
         validators=[DataRequired()]
     )
+    job_status = SelectField(
+        'Job Status',
+        choices=[('open', 'Open'), ('closed', 'Closed')],
+        validators=[DataRequired()]
+    )
+    
+    dead_line = DateField(
+        'Application Deadline',
+        format='%Y-%m-%d',
+        validators=[DataRequired()]
+    )
+    
     submit = SubmitField('Post Job')

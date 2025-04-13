@@ -3,11 +3,12 @@ from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm
 import bcrypt
 from models import db, Config, Candidate, Company ,JobPosting
 from datetime import datetime
+from flask_migrate import Migrate
 
 app = Flask(__name__, template_folder='templates')
 app.config.from_object(Config)
 db.init_app(app)
-
+migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
@@ -90,7 +91,6 @@ def signup():
 def login():
     if "user_id" and 'Role' in session:
         return redirect(url_for("candidate" if session['Role'] == 'Candidate' else "company"))
-
     form = Login()
     if form.validate_on_submit():
         email = form.email.data
@@ -103,7 +103,7 @@ def login():
         else:
             user = Candidate.query.filter_by(email=email).first()
             key = user.password
-        if user is None:
+        if user is None or key is None:
             flash("User not found!", "danger")
             return redirect(url_for("login"))
 
@@ -178,13 +178,17 @@ def Post_Jobs() :
         qualification = form.qualification.data
         location = form.location.data
         city = form.city.data
+        status = form.job_status.data
+        deadline =  form.dead_line.data
         salary = form.salary.data
         skills =  form.skills.data
         job_type = form.job_type.data
         current_time = datetime.now()
-        dop = current_time.strftime("%d-%m-%Y")
+        dop = current_time.strftime("%Y-%m-%d")
         job_industry = form.job_industry.data
         job_data = JobPosting(
+            job_deadline = deadline ,
+            job_status = status ,
             job_title=title,
             job_industry =  job_industry , 
             job_description=description,
@@ -212,6 +216,13 @@ def View_Jobs():
     job = JobPosting.query.filter_by(company_id=session['user_id']).all()
     return render_template("view_jobs.html", jobs=job)
 
+
+
+@app.route("/jobs")
+def Jobs():
+    job = JobPosting.query.all()
+    return render_template("jobs.html", jobs=job)
+    
 # ------------------ RUN APP ------------------
 
 if __name__ == '__main__':
