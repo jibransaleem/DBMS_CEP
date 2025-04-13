@@ -282,22 +282,53 @@ def My_applications():
     return render_template('myjobs.html', data = applied_jobs)    
 
 @app.route('/recivedjobs')
-def recivedjobs(): # jobs recvied by comapny
-    applications = db.session.query(
-    Candidate.full_name.label("full_name"),
-    JobPosting.job_title.label("job_title"),
-    JobApplication.apply_date.label("apply_date"),
-    JobApplication.resume_url.label("resume_url"),
-    JobPosting.job_industry.label("job_industry")
-    ).join(
-    JobPosting, JobApplication.job_id == JobPosting.job_id
-    ).join(
-    Candidate, JobApplication.candidate_id == Candidate.id
-    ).filter(
-    JobPosting.company_id == session['user_id']
-    ).all()
+def recivedjobs():  # jobs received by company
+    job_type = request.args.get('job_type', '').strip()
+    industry = request.args.get('industry', '').strip()
+    apply_date = request.args.get('apply_date', '').strip()
 
-    return render_template("recieved_jobs.html", data = applications)
+    # Set filter flags
+    filter_flags = {
+        'job_type_applied': bool(job_type),
+        'industry_applied': bool(industry),
+        'apply_date_applied': bool(apply_date)
+    }
+    filters_applied = any(filter_flags.values())
+
+    # Base query
+    query = db.session.query(
+        Candidate.full_name.label("full_name"),
+        JobPosting.job_title.label("job_title"),
+        JobPosting.job_type.label("job_type"),
+        JobApplication.apply_date.label("apply_date"),
+        JobApplication.resume_url.label("resume_url"),
+        JobPosting.job_industry.label("job_industry")
+    ).join(
+        JobPosting, JobApplication.job_id == JobPosting.job_id
+    ).join(
+        Candidate, JobApplication.candidate_id == Candidate.id
+    ).filter(
+        JobPosting.company_id == session['user_id']
+    )
+
+    # Apply filters
+    if job_type:
+        query = query.filter(JobPosting.job_type == job_type)
+    if industry:
+        query = query.filter(JobPosting.job_industry == industry)
+    if apply_date:
+        query = query.filter(JobApplication.apply_date == apply_date)
+
+    # Execute query
+    applications = query.all()
+
+    return render_template(
+        'recieved_jobs.html',
+        data=applications,
+        filters_applied=filters_applied,
+        filter_flags=filter_flags
+    )
+
 # ------------------ RUN APP ------------------
 
 if __name__ == '__main__':
