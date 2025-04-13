@@ -82,7 +82,6 @@ class JobPosting(db.Model):
 
 class JobApplication(db.Model):
     __tablename__ = 'job_application'
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     resume_url = db.Column(db.String(300), nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)

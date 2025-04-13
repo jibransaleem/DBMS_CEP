@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | JobConnect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    },
+                    animation: {
+                        slideIn: 'slideIn 0.5s ease-out forwards'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Background Mesh */
+        .bg-mesh {
+            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-size: 40px 40px;
+            background-color: #f9fafb;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            transition: all 0.3s ease;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+        }
+        .search-bar:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Table Styling */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .max-w-7xl {
+                padding: 0 1rem;
+            }
+            table {
+                font-size: 0.875rem;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen p-8 antialiased">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 space-y-6 sm:space-y-0 animate-slideIn">
+            <div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 flex items-center gap-4">
+                    <i class="fas fa-briefcase text-blue-500"></i>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
+                        My Applications
+                    </span>
+                </h1>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl">
+                    View all the job applications submitted to your company.
+                </p>
+            </div>
+            <a href="/profile" class="px-6 py-3 rounded-lg font-semibold flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700">
+                <i class="fas fa-user mr-2"></i> My Profile
+            </a>
+        </header>
+
+        <!-- Search Section -->
+        <div class="mb-10 bg-white rounded-xl shadow-sm p-6 animate-slideIn" style="animation-delay: 0.1s;">
+            <div class="search-bar rounded-lg flex items-center px-4 py-3">
+                <i class="fas fa-search text-gray-400 mr-3"></i>
+                <input type="text" placeholder="Search applications by candidate name or job title..."
+                       class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
+                       id="applicationSearch">
+            </div>
+        </div>
+
+        <!-- Applications Table -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden animate-slideIn" style="animation-delay: 0.2s;">
+            <div class="overflow-x-auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidate Name</th>
+                            <th>Job Title (Role)</th>
+                            <th>Industry</th>
+                            <th>Resume</th>
+                            <th>Applied Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsTable">
+                        {% for application in data %}
+                            <tr>
+                                <td class="text-sm text-gray-900">{{ application.full_name }}</td>
+                                <td class="text-sm text-gray-900">{{ application.job_title }}</td>
+                                <td class="text-sm text-gray-600">{{ application.job_industry }}</td>
+                                <td class="text-sm">
+                                    <a href="{{ application.resume_url }}" target="_blank" class="text-blue-600 hover:text-blue-800 font-medium">
+                                        View Resume
+                                    </a>
+                                </td>
+                                <td class="text-sm text-gray-600">{{ application.apply_date | default('N/A') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="py-12 text-center text-gray-600">
+                                    <div class="max-w-md mx-auto">
+                                        <i class="fas fa-clipboard-list text-7xl text-gray-300 mb-4"></i>
+                                        <h3 class="text-2xl font-bold text-gray-900 mb-3">No Applications</h3>
+                                        <p class="text-gray-600">No candidates have applied to your job postings yet.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for Animations
+        const elements = document.querySelectorAll('.animate-slideIn');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        elements.forEach(el => {
+            el.classList.add('opacity-0', 'translate-y-6');
+            observer.observe(el);
+        });
+
+        // Client-Side Search Functionality
+        const searchInput = document.getElementById('applicationSearch');
+        const tableRows = document.querySelectorAll('#applicationsTable tr:not(:has(td[colspan]))');
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const candidateName = row.cells[0].textContent.toLowerCase();
+                const jobTitle = row.cells[1].textContent.toLowerCase();
+
+                if (candidateName.includes(searchTerm) || jobTitle.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

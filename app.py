@@ -206,9 +206,6 @@ def Post_Jobs() :
         return redirect(url_for('Post_Jobs'))
 # Add the new job posting to the session and commit it to the database
     return render_template("post_job.html", form = form)
-@app.route("/ViewApplications")
-def View_Applications() :
-    return "<h1>GOOD</h1>"
     
 @app.route("/ViewJob")
 def View_Jobs():
@@ -274,7 +271,7 @@ def submit_application(job_id):
     flash('Error: Please check your form inputs', 'error')
     return redirect(url_for("apply_job" , job_id = job_id))
 
-@app.route("/Myapplications")
+@app.route("/Myapplications") #  my posted jobs by company
 def My_applications(): 
     applied_jobs = db.session.query(JobPosting, JobApplication, Company).\
     join(JobApplication, JobPosting.job_id == JobApplication.job_id).\
@@ -283,6 +280,24 @@ def My_applications():
     all()
 
     return render_template('myjobs.html', data = applied_jobs)    
+
+@app.route('/recivedjobs')
+def recivedjobs(): # jobs recvied by comapny
+    applications = db.session.query(
+    Candidate.full_name.label("full_name"),
+    JobPosting.job_title.label("job_title"),
+    JobApplication.apply_date.label("apply_date"),
+    JobApplication.resume_url.label("resume_url"),
+    JobPosting.job_industry.label("job_industry")
+    ).join(
+    JobPosting, JobApplication.job_id == JobPosting.job_id
+    ).join(
+    Candidate, JobApplication.candidate_id == Candidate.id
+    ).filter(
+    JobPosting.company_id == session['user_id']
+    ).all()
+
+    return render_template("recieved_jobs.html", data = applications)
 # ------------------ RUN APP ------------------
 
 if __name__ == '__main__':

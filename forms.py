@@ -150,3 +150,5 @@ class JobPostForm(FlaskForm):
 class JobApplicationForm(FlaskForm):
     resume = FileField('Upload Resume', validators=[DataRequired(), FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit Application')
+    
+    
