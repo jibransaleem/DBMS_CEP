@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, flash, request
-from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm , JobApplicationForm
+from forms import JobSeekerForm, RecruiterForm, Login , JobPostForm , JobApplicationForm , Edit_Company
 import bcrypt
 from models import db, Config, Candidate, Company ,JobPosting , JobApplication
 from datetime import datetime 
@@ -144,30 +144,39 @@ def company():
 @app.route("/ChangePassword")
 def Edit_password() :
     return render_template("change_password.html")
-@app.route("/EditCompanyDetails", methods=['GET', 'POST'])
-def Edit_Company_Details():
-    form = RecruiterForm()
-    data = Company.query.filter_by(id=session['user_id']).first()
 
+@app.route("/EditCompanyDetails", methods=[ 'POST' ,'GET'])
+def Edit_Company_Details():
+    form  = Edit_Company()
     if 'user_id' not in session:
         flash('User not logged in!', 'error')
         return redirect(url_for('login'))
+    data = Company.query.filter_by(id=session['user_id']).first()
     if request.method == "POST" and form.validate_on_submit():
-        # Process form data
         data.company_name = form.company_name.data
         data.company_email = form.company_email.data
         data.company_phone = form.company_phone.data
         data.company_location = form.company_location.data
         data.company_industry = form.company_industry.data
-
         db.session.commit()
         flash('Company details updated successfully!', 'success')
-        return redirect(url_for('company'))  # Adjust this to where you want to go after submission
 
-    return render_template("edit_comp.html", form=form, data=data)
-@app.route("/EditJobs")
-def Edit_Jobs() :
-    return render_template("edit_job.html")
+    elif request.method == "GET":
+        form.company_name.data = data.company_name
+        form.company_email.data = data.company_email
+        form.company_phone.data = data.company_phone
+        form.company_location.data = data.company_location
+        form.company_industry.data = data.company_industry  
+
+    return render_template("edit_comp.html", form=form , data=data)
+
+
+@app.route("/view_Jobs")
+def Jobs_for_edit():
+    job = JobPosting.query.all()
+    return render_template("edit_job.html", jobs=job)
+
+
 @app.route("/PostJob" , methods =['POST', 'GET'])
 def Post_Jobs() :
     form = JobPostForm()
@@ -211,14 +220,10 @@ def Post_Jobs() :
 def View_Jobs():
     job = JobPosting.query.filter_by(company_id=session['user_id']).all()
     return render_template("view_jobs.html", jobs=job)
-
-
-
 @app.route("/jobs")
 def Jobs():
     job = JobPosting.query.all()
-    return render_template("jobs.html", jobs=job)
-    
+    return render_template("jobs.html", jobs=job)    
 @app.route("/applyjob/ <int:job_id> ", methods=['GET', 'POST'])
 def apply_job(job_id):
     form = JobApplicationForm()
@@ -287,12 +292,13 @@ def recivedjobs():  # jobs received by company
     industry = request.args.get('industry', '').strip()
     apply_date = request.args.get('apply_date', '').strip()
 
-    # Set filter flags
+    # seeing which filters have been applied
     filter_flags = {
         'job_type_applied': bool(job_type),
         'industry_applied': bool(industry),
         'apply_date_applied': bool(apply_date)
     }
+    # cheking if any filters applied or not
     filters_applied = any(filter_flags.values())
 
     # Base query
@@ -325,9 +331,7 @@ def recivedjobs():  # jobs received by company
     return render_template(
         'recieved_jobs.html',
         data=applications,
-        filters_applied=filters_applied,
-        filter_flags=filter_flags
-    )
+        filters_applied=filters_applied)
 
 # ------------------ RUN APP ------------------
 

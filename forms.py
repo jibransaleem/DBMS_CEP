@@ -67,7 +67,6 @@ class RecruiterForm(FlaskForm):
         EqualTo('company_password', message="Passwords must match")
     ])
     submit = SubmitField('Sign Up as Recruiter')
-    edit = SubmitField('Save Make changes')
 
 class Login(FlaskForm):
     email = EmailField('Email', validators=[
@@ -150,5 +149,41 @@ class JobPostForm(FlaskForm):
 class JobApplicationForm(FlaskForm):
     resume = FileField('Upload Resume', validators=[DataRequired(), FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit Application')
+    
+class Edit_Company(FlaskForm) :
+    INDUSTRY_CHOICES = [
+        ('', 'Select an industry'),
+        ('technology', 'Technology & IT'),
+        ('healthcare', 'Healthcare & Medical'),
+        ('finance', 'Finance & Banking'),
+        ('education', 'Education & Training'),
+        ('retail', 'Retail & E-commerce'),
+        ('manufacturing', 'Manufacturing & Production'),
+        ('other', 'Other')
+    ]
+    company_name = StringField('Company Name', validators=[
+        DataRequired(message="Please enter your company name"),
+        Length(min=2, max=100, message="Company name must be between 2 and 100 characters")
+    ])
+    company_email = EmailField('Email', validators=[
+        DataRequired(message="Please enter your company email"),
+        Email(message="Please enter a valid email address")
+    ])
+    company_phone = TelField('Phone Number', validators=[
+        DataRequired(message="Please enter your company phone number"),
+        Length(min=10, message="Please enter a valid phone number")
+    ])
+    company_location = StringField('Location', validators=[
+        DataRequired(message="Please enter your company location"),
+        Length(min=2, max=100, message="Location must be between 2 and 100 characters")
+    ])
+    company_industry = SelectField('Industry', 
+        choices=INDUSTRY_CHOICES,
+        validators=[DataRequired(message="Please select your company industry")]
+    )
+    submit = SubmitField('Make Save Changes')
+    
+# class EditJob(FlaskForm):
+#     submit = SubmitField('Make Save Changes')
     
     

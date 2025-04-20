@@ -90,3 +90,16 @@ class JobApplication(db.Model):
     apply_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)  # Set default to current time
 
 # backref create reverse relation gbh job_appcaiton m nh krna pra
+
+class SavedJob(db.Model):
+    __tablename__ = 'saved_jobs'
+    saved_job_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('jobposts.job_id'), nullable=False)
+    saved_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    notes = db.Column(db.String(500), nullable=True)  # Optional field for notes
+    reminder_date = db.Column(db.Date, nullable=True)  # Optional reminder date for follow-up
+
+    # Relationship to Candidate and JobPosting
+    candidate = db.relationship('Candidate', backref=db.backref('saved_jobs', lazy=True))
+    jobposting = db.relationship('JobPosting', backref=db.backref('saved_jobs', lazy=True))
