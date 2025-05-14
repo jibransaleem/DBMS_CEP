@@ -6,7 +6,7 @@ db = SQLAlchemy()
 class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql://root:Jibran123%40%23@localhost/DB'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = '12345678'
+    SECRET_KEY = '123456789'
 
 # ---------------------- Candidate Table ----------------------
 
@@ -42,7 +42,7 @@ class Company(db.Model):
     # One-to-many relationship with JobPosting
     job_posts = db.relationship('JobPosting', backref='company', cascade="all, delete", lazy=True)
     # One-to-many relationship with JobApplication
-    job_applications = db.relationship('JobApplication', backref='company', lazy=True)
+    # job_applications = db.relationship('JobApplication', backref='company', lazy=True)
 
 
 # ---------------------- JobPosting Table ----------------------
@@ -84,7 +84,6 @@ class JobApplication(db.Model):
     __tablename__ = 'job_application'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     resume_url = db.Column(db.String(300), nullable=False)
-    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     job_id = db.Column(db.Integer, db.ForeignKey('jobposts.job_id'), nullable=False)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False) 
     apply_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)  # Set default to current time
@@ -98,7 +97,7 @@ class SavedJob(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('jobposts.job_id'), nullable=False)
     saved_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     notes = db.Column(db.String(500), nullable=True)  # Optional field for notes
-    reminder_date = db.Column(db.Date, nullable=True)  # Optional reminder date for follow-up
+    reminder_date = db.Column(db .Date, nullable=True)  # Optional reminder date for follow-up
 
     # Relationship to Candidate and JobPosting
     candidate = db.relationship('Candidate', backref=db.backref('saved_jobs', lazy=True))

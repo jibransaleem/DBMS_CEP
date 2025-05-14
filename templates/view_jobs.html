@@ -10,6 +10,21 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f7ff',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                    },
                     keyframes: {
                         shimmer: {
                             '100%': { transform: 'translateX(100%)' }
@@ -21,25 +36,42 @@
                         scale: {
                             '0%, 100%': { transform: 'scale(1)' },
                             '50%': { transform: 'scale(1.05)' }
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pulse: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.5' }
                         }
                     },
                     animation: {
                         shimmer: 'shimmer 2s infinite',
                         float: 'float 6s ease-in-out infinite',
-                        scale: 'scale 6s ease-in-out infinite'
+                        scale: 'scale 6s ease-in-out infinite',
+                        fadeInUp: 'fadeInUp 0.6s ease-out forwards',
+                        pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
                     }
                 }
             }
         }
     </script>
     <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f9ff;
+        }
+        
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
         }
         
         .card-hover:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #7dd3fc;
         }
 
         .shimmer {
@@ -65,103 +97,123 @@
             content: '';
         }
 
-        .gradient-border {
-            position: relative;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
+        /* Button hover effect */
+        .btn-primary {
+            background-image: linear-gradient(to right, #0ea5e9, #38bdf8);
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+        }
+        
+        .btn-primary:hover {
+            background-position: right center;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
         }
 
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 0.85rem;
-            background: linear-gradient(
-                45deg,
-                #0ea5e9,
-                #38bdf8,
-                #7dd3fc,
-                #0ea5e9
-            );
-            mask: 
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-            mask-composite: exclude;
+        .btn-outline {
+            transition: all 0.3s ease;
+            border: 2px solid #e0f7ff;
+        }
+        
+        .btn-outline:hover {
+            border-color: #38bdf8;
+            background-color: #f0f9ff;
+            transform: translateY(-1px);
+        }
+
+        .animate-fade-in-up {
             opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .gradient-border:hover::before {
-            opacity: 1;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
+            transform: translateY(20px);
             animation: fadeInUp 0.6s ease-out forwards;
         }
 
         .bg-mesh {
-            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+            background-image: radial-gradient(circle at 1px 1px, #bae6fd 1px, transparent 0);
             background-size: 40px 40px;
+            background-color: #f0f9ff;
         }
 
         /* Add status color styles */
         .status-open {
-            background-color: #34D399; /* Green for open */
+            background-color: #10b981; /* Green for open */
             color: white;
         }
 
         .status-closed {
-            background-color: #F87171; /* Red for closed */
+            background-color: #ef4444; /* Red for closed */
             color: white;
         }
 
         .status-deadline {
-            background-color: #FBBF24; /* Yellow for deadline */
+            background-color: #f59e0b; /* Yellow for deadline */
             color: white;
+        }
+        
+        .skill-tag {
+            transition: all 0.2s ease;
+        }
+        
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .job-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .job-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #0ea5e9, #38bdf8);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .job-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .action-button {
+            transition: all 0.2s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
         }
     </style>
 </head>
-<body class="bg-mesh min-h-screen p-6 antialiased">
+<body class="bg-mesh min-h-screen py-8 px-4 sm:px-6 lg:px-8 antialiased">
     <div class="max-w-7xl mx-auto">
         <!-- Header with enhanced design -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 space-y-4 sm:space-y-0">
-            <div class="fade-in-up" style="animation-delay: 0.1s">
-                <h1 class="text-4xl font-extrabold text-gray-900 flex items-center group">
-                    <i class="fas fa-briefcase text-sky-500 mr-3 group-hover:animate-bounce transition-all duration-300"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-sky-600">
-                        Your Jobs
-                    </span>
+            <div class="animate-fade-in-up" style="animation-delay: 0.1s">
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <span>Your Jobs</span>
                 </h1>
                 <p class="mt-2 text-gray-600">Manage and track your job postings</p>
             </div>
             
-            <div class="flex items-center gap-4 fade-in-up" style="animation-delay: 0.2s">
-                <a href="{{ url_for('Post_Jobs') }}" 
-                   class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden">
-                    <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
-                    <span class="relative flex items-center">
-                        <i class="fas fa-plus-circle mr-2 group-hover:animate-spin"></i>
-                        Post a Job
-                    </span>
+            <div class="flex items-center gap-3 animate-fade-in-up" style="animation-delay: 0.2s">
+                <a href="{{ url_for('company') }}" 
+                   class="btn-outline px-4 py-2 rounded-lg font-medium text-gray-700 flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Dashboard
                 </a>
                 
-                <a href="{{ url_for('company') }}" 
-                   class="group relative px-6 py-3 rounded-full font-semibold text-gray-700 overflow-hidden border-2 border-gray-300 hover:border-gray-400 transition-colors duration-300">
-                    <span class="relative flex items-center">
-                        <i class="fas fa-arrow-left mr-2 group-hover:transform group-hover:-translate-x-1 transition-transform"></i>
-                        Dashboard
-                    </span>
+                <a href="{{ url_for('Post_Jobs') }}" 
+                   class="btn-primary px-4 py-2 rounded-lg font-medium text-white flex items-center">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Post a Job
                 </a>
             </div>
         </div>
@@ -169,74 +221,84 @@
         <!-- Enhanced Job Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for job in jobs %}
-                <div class="gradient-border bg-white p-6 card-hover fade-in-up shadow-sm" 
+                <div class="job-card bg-white rounded-xl shadow-sm card-hover animate-fade-in-up" 
                      style="animation-delay: {{ loop.index * 0.1 }}s">
-                    <div class="flex flex-col mb-4">
-                        <h2 class="text-2xl font-bold text-gray-900 leading-tight mb-2 break-words">{{ job.job_title }}</h2>
-                        <span class="self-start px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-medium">
-                            {{ job.job_type }}
-                        </span>
-                    </div>
-                    
-                    <div class="space-y-3 text-gray-600">
-                        <p class="flex items-center">
-                            <i class="fas fa-map-marker-alt w-5 text-sky-500"></i>
-                            <span class="ml-2">{{ job.job_location }}, {{ job.job_city }}</span>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-dollar-sign w-5 text-sky-500"></i>
-                            <span class="ml-2">{{ job.job_salary }}</span>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-industry w-5 text-sky-500"></i>
-                            <span class="ml-2">{{ job.job_industry }}</span>
-                        </p>
-                    </div>
-
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                            {{ job.job_description }}
-                        </p>
-                    </div>
-
-                    <!-- Job status and deadline -->
-                    <div class="mt-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium 
-                                    {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
-                            {{ job.job_status | capitalize }}
-                        </span>
-                        <p class="mt-2 text-sm text-gray-500">
-                            <i class="fas fa-calendar-alt mr-2 text-sky-500"></i>
-                            Deadline: {{ job.job_deadline }}
-                        </p>
-                    </div>
-
-                    <div class="flex flex-wrap gap-2 mt-4">
-                        {% for skill in job.job_skills.split(',') %}
-                            <span class="px-3 py-1 bg-sky-50 text-sky-700 text-xs font-medium rounded-full hover:bg-sky-100 transition-colors duration-200">
-                                {{ skill.strip() }}
+                    <div class="p-6">
+                        <div class="flex flex-col mb-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h2 class="text-xl font-bold text-gray-900 leading-tight break-words">{{ job.job_title }}</h2>
+                                <span class="px-3 py-1 rounded-full text-xs font-medium ml-2 
+                                        {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
+                                    {{ job.job_status | capitalize }}
+                                </span>
+                            </div>
+                            <span class="self-start px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+                                {{ job.job_type }}
                             </span>
-                        {% endfor %}
+                        </div>
+                        
+                        <div class="space-y-3 text-gray-600 text-sm">
+                            <p class="flex items-center">
+                                <i class="fas fa-map-marker-alt w-5 text-primary-500"></i>
+                                <span class="ml-2">{{ job.job_location }}, {{ job.job_city }}</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-dollar-sign w-5 text-primary-500"></i>
+                                <span class="ml-2">{{ job.job_salary }}</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-industry w-5 text-primary-500"></i>
+                                <span class="ml-2">{{ job.job_industry }}</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-calendar-alt w-5 text-primary-500"></i>
+                                <span class="ml-2">Deadline: {{ job.job_deadline }}</span>
+                            </p>
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                                {{ job.job_description }}
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            {% for skill in job.job_skills.split(',') %}
+                                <span class="skill-tag px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full">
+                                    {{ skill.strip() }}
+                                </span>
+                            {% endfor %}
+                        </div>
                     </div>
 
-                    <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-2"></i>
+                    <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 rounded-b-xl flex items-center justify-between">
+                        <p class="text-xs text-gray-500 flex items-center">
+                            <i class="fas fa-clock mr-2 text-primary-400"></i>
                             Posted: {{ job.job_dop }}
                         </p>
-                        <button class="text-sky-600 hover:text-sky-700 transition-colors duration-200">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </button>
+                        <div class="flex space-x-2">
+                            <a href="#" class="action-button p-2 rounded-full text-primary-500 hover:bg-primary-50" title="Edit Job">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="action-button p-2 rounded-full text-primary-500 hover:bg-primary-50" title="View Applications">
+                                <i class="fas fa-users"></i>
+                            </a>
+                            <a href="#" class="action-button p-2 rounded-full text-primary-500 hover:bg-primary-50" title="More Options">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% else %}
-                <div class="col-span-full text-center py-16 fade-in-up">
-                    <div class="max-w-md mx-auto">
-                        <i class="fas fa-clipboard-list text-6xl text-gray-300 mb-4 animate-float"></i>
+                <div class="col-span-full text-center py-16 animate-fade-in-up">
+                    <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-sm card-hover">
+                        <div class="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-clipboard-list text-primary-500 text-3xl"></i>
+                        </div>
                         <h3 class="text-2xl font-bold text-gray-900 mb-2">No jobs posted yet</h3>
                         <p class="text-gray-600 mb-6">Create your first job posting and start finding the perfect candidates.</p>
                         <a href="{{ url_for('Post_Jobs') }}" 
-                           class="inline-flex items-center px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-sky-400 to-sky-500 hover:opacity-90 transition-opacity duration-300">
+                           class="btn-primary inline-flex items-center px-6 py-3 rounded-lg font-medium text-white">
                             <i class="fas fa-plus-circle mr-2"></i>
                             Post Your First Job
                         </a>
@@ -248,22 +310,43 @@
 
     <script>
         // Add intersection observer for smooth scroll animations
-        const cards = document.querySelectorAll('.fade-in-up');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.animate-fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             });
-        }, {
-            threshold: 0.1
-        });
 
-        cards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            observer.observe(card);
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                observer.observe(card);
+            });
+            
+            // Add hover effects for action buttons
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('animate-pulse');
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('animate-pulse');
+                    }
+                });
+            });
         });
     </script>
 </body>

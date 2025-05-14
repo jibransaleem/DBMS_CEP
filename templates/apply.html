@@ -253,7 +253,7 @@
         <!-- Application Form -->
         <div class="form-container bg-white rounded-xl shadow-sm p-6 sm:p-8 animate-slideIn" style="animation-delay: 0.3s;">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Submit Your Application</h2>
-            <form method="POST" action="{{ url_for('submit_application', job_id=job.job_id) }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ url_for('apply_job', job_id=job.job_id) }}" enctype="multipart/form-data" class="space-y-6">
                 {{ form.hidden_tag() }}
         
         

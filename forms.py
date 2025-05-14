@@ -183,7 +183,19 @@ class Edit_Company(FlaskForm) :
     )
     submit = SubmitField('Make Save Changes')
     
-# class EditJob(FlaskForm):
-#     submit = SubmitField('Make Save Changes')
+class EditPassword(FlaskForm):
+    password = PasswordField('Password', validators=[
+        DataRequired(message="Please enter a password"),
+        Length(min=8, message="Password must be at least 8 characters long")
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(message="Please confirm your password"),
+        EqualTo('company_password', message="Passwords must match")
+    ])
+    new_password =  PasswordField('Confirm Password', validators=[
+        DataRequired(message="Please confirm your password"),
+        EqualTo('company_password', message="Passwords must match")
+    ])
+    
     
     

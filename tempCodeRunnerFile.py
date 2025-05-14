@@ -1,1 +1,1 @@
-recivedjobs
+job_skills
