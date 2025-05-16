@@ -57,6 +57,7 @@ class JobPosting(db.Model):
     job_qualification = db.Column(db.String(300), nullable=False)
     job_location = db.Column(db.String(100), nullable=False)
     job_city = db.Column(db.String(20), nullable=False)
+
     job_industry = db.Column(
         db.Enum('technology', 'healthcare', 'finance', 'education', 'retail', 'manufacturing', 'other'),
         nullable=False
@@ -73,7 +74,6 @@ class JobPosting(db.Model):
     job_dop = db.Column(db.String(30), nullable=False)  
     job_deadline = db.Column(db.Date, nullable=False)
     job_status = db.Column(db.Enum("open", "closed"), nullable=False, default="open")
-
     # One-to-many relationship with JobApplication
     job_applications = db.relationship('JobApplication', backref='jobposting', lazy=True)
 

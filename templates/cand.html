@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidate Dashboard | JobConnect</title>
+    <title>Candidate Dashboard |Naukri Dhondo </title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f7ff',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                    },
                     keyframes: {
                         shimmer: {
                             '100%': { transform: 'translateX(100%)' }
@@ -17,150 +34,296 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' }
+                        },
+                        fadeInUp: {
+                            'from': { opacity: '0', transform: 'translateY(20px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        fadeOut: {
+                            'from': { opacity: '1' },
+                            'to': { opacity: '0' }
+                        },
+                        pulse: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.5' }
+                        },
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        wave: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(-25%)' },
+                            '100%': { transform: 'translateX(0)' }
                         }
                     },
                     animation: {
                         shimmer: 'shimmer 2s infinite',
-                        float: 'float 6s ease-in-out infinite'
+                        float: 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'fade-out': 'fadeOut 0.6s ease-out forwards',
+                        pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        gradient: 'gradient 8s ease infinite',
+                        wave: 'wave 10s ease-in-out infinite'
                     }
                 }
             }
         }
     </script>
     <style>
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
         }
         
-        .card-hover:hover {
+        /* Custom card styles */
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-
+        
+        /* Custom button styles */
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        /* Custom nav styles */
+        .nav-pill {
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+        }
+        
+        .nav-pill:hover {
+            background-color: rgba(14, 165, 233, 0.1);
+        }
+        
+        .nav-pill.active {
+            background-color: #0ea5e9;
+            color: white;
+        }
+        
+        /* Job card styles */
         .job-card {
-            border-left: 4px solid transparent;
             transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
         }
-
+        
         .job-card:hover {
-            border-left-color: #0ea5e9;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-
-        .dropdown-animation {
-            transition: all 0.3s ease;
+        
+        /* Progress bar animation */
+        .progress-bar {
+            position: relative;
+            overflow: hidden;
         }
-
-        .dropdown-content {
-            display: none;
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                rgba(255,255,255,0) 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        /* Wave background */
+        .wave-bg {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            top: 60%;
+            left: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%230ea5e9'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%230ea5e9'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%230ea5e9'/%3E%3C/svg%3E");
+            background-size: 100% 100px;
+            background-repeat: no-repeat;
+            animation: wave 10s ease-in-out infinite;
+            opacity: 0.3;
+        }
+        
+        /* Skill tag styles */
+        .skill-tag {
+            transition: all 0.2s ease;
+            border-radius: 9999px;
+        }
+        
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Dot pattern background */
+        .dot-pattern {
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Career tips carousel */
+        .tips-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tip-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s, transform 0.3s;
+            visibility: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
+        
+        .tip-item.active {
             opacity: 1;
-            transform: translateY(0);
+            visibility: visible;
         }
-
-        .progress-bar-animated {
-            background: linear-gradient(-45deg, #0ea5e9, #38bdf8, #7dd3fc, #0ea5e9);
-            background-size: 400% 400%;
-            animation: gradient 3s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .bg-mesh {
-            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
-            background-size: 40px 40px;
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(90deg, #0ea5e9, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
     </style>
 </head>
-<body class="bg-mesh min-h-screen flex flex-col antialiased">
+<body class="bg-slate-50 min-h-screen flex flex-col antialiased">
     <!-- Navbar -->
-    <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <i class="fas fa-briefcase text-sky-500 text-xl"></i>
-            <span class="text-xl font-semibold">JobConnect</span>
-        </div>
-        <ul class="hidden md:flex space-x-6 font-medium">
-            <li><a href="#" class="text-sky-500 border-b-2 border-sky-500 pb-1">Dashboard</a></li>
-            <li><a href="{{url_for('Jobs')}}" class="hover:text-sky-500">Browse Jobs</a></li>
-            <li><a href="{{url_for('My_applications')}}" class="hover:text-sky-500">Applications</a></li>
-            <li><a href='#' class="hover:text-sky-500">Profile</a></li>
-        </ul>
-        <div class="flex items-center space-x-4">
-            <div class="relative dropdown">
-                <button class="flex items-center text-gray-700 hover:text-sky-500 focus:outline-none dropdown-animation">
-                    <span class="font-medium">Candidate</span>
-                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10 dropdown-content border border-gray-100">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Your Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Settings</a>
-                    <div class="border-t border-gray-100"></div>
-                    <a href="{{url_for('logout')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Sign out</a>
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex items-center">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <span class="ml-3 text-xl font-bold text-gray-900">Naukri Dhondo</span>
+                    </div>
+                </div>
+                
+                <!-- Center Navigation Pills -->
+                <nav class="hidden md:flex items-center space-x-1">
+                    <a href="#" class="nav-pill active px-4 py-2 text-sm font-medium">
+                        <i class="fas fa-home mr-1.5"></i> Dashboard
+                    </a>
+                    <a href="{{url_for('Jobs')}}" class="nav-pill px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">
+                        <i class="fas fa-search mr-1.5"></i> Find Jobs
+                    </a>
+                    <a href="{{url_for('My_applications')}}" class="nav-pill px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">
+                        <i class="fas fa-file-alt mr-1.5"></i> Applications
+                    </a>
+                    <a href="#" class="nav-pill px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600">
+                        <i class="fas fa-user mr-1.5"></i> Profile
+                    </a>
+                </nav>
+                
+                <!-- Right Side -->
+                <div class="flex items-center gap-3">
+                    <!-- Notifications -->
+                    <button class="relative p-2 rounded-full hover:bg-gray-100 focus:outline-none">
+                        <i class="fas fa-bell text-gray-600"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="relative dropdown">
+                        <button class="flex items-center gap-2 p-1.5 rounded-full bg-primary-50 hover:bg-primary-100 focus:outline-none">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white">
+                                <i class="fas fa-user-alt text-sm"></i>
+                            </div>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10 hidden dropdown-content border border-gray-100">
+                            <div class="px-4 py-2 border-b border-gray-100">
+                                <p class="text-sm font-medium text-gray-900">Candidate</p>
+                                <p class="text-xs text-gray-500">candidate@example.com</p>
+                            </div>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600">
+                                <i class="fas fa-user mr-2"></i> Your Profile
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="{{url_for('logout')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="md:hidden bg-white border-t border-gray-200 fixed bottom-0 w-full z-10">
-        <div class="flex justify-around py-2">
-            <a href="#" class="text-sky-500 flex flex-col items-center">
-                <i class="fas fa-home text-xl"></i>
-                <span class="text-xs mt-1">Home</span>
-            </a>
-            <a href="{{url_for('Jobs')}}" class="text-gray-600 flex flex-col items-center">
-                <i class="fas fa-search text-xl"></i>
-                <span class="text-xs mt-1">Jobs</span>
-            </a>
-            <a href="{{url_for('My_applications')}}" class="text-gray-600 flex flex-col items-center">
-                <i class="fas fa-file-alt text-xl"></i>
-                <span class="text-xs mt-1">Applications</span>
-            </a>
-            <a href="#" class="text-gray-600 flex flex-col items-center">
-                <i class="fas fa-user text-xl"></i>
-                <span class="text-xs mt-1">Profile</span>
-            </a>
-        </div>
-    </div>
+    </header>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="container mx-auto px-4 mt-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
                 {% for category, message in messages %}
-                    <div class="{% if category == 'error' or category == 'warning' %}bg-red-100 border-l-4 border-red-500 text-red-700{% else %}bg-green-100 border-l-4 border-green-500 text-green-700{% endif %} p-4 mb-4 rounded-xl">
+                    <div class="{% if category == 'error' or category == 'warning' %}bg-red-50 border-l-4 border-red-500 text-red-800{% else %}bg-green-50 border-l-4 border-green-500 text-green-800{% endif %} p-4 mb-4 rounded-lg animate-fade-in-up">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-{% if category == 'error' or category == 'warning' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+                                <i class="fas fa-{% if category == 'error' or category == 'warning' %}exclamation-circle text-red-500{% else %}check-circle text-green-500{% endif %} text-xl"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm">{{ message }}</p>
+                                <p class="text-sm font-medium">{{ message }}</p>
                             </div>
-                            <button class="ml-auto" onclick="this.parentElement.parentElement.remove()">
+                            <button class="ml-auto text-gray-400 hover:text-gray-500" onclick="this.parentElement.parentElement.remove()">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
@@ -170,136 +333,66 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Content Section -->
-    <main class="container mx-auto p-4 md:p-6 mb-16 md:mb-0">
-        <!-- Welcome Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.1s">
-            <div class="flex flex-col md:flex-row md:items-center justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h1 class="text-2xl md:text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-sky-600">Welcome back, Candidate!</h1>
-                    <p class="text-gray-600 mt-1">Here's what's happening with your job search today.</p>
-                </div>
-                <div class="flex space-x-3">
-                    <a href="#" class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden">
-                        <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
-                        <span class="relative flex items-center">
-                            <i class="fas fa-search mr-2"></i>
-                            Find Jobs
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Completion Bar -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.2s">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-lg font-semibold text-gray-900">Profile Completion</h2>
-                <span class="text-sky-500 font-semibold">30%</span>
-            </div>
-            <div class="w-full bg-gray-100 rounded-full h-2.5 mb-2 overflow-hidden">
-                <div class="progress-bar-animated h-2.5 rounded-full" style="width: 30%"></div>
-            </div>
-            <div class="flex justify-between items-center text-sm">
-                <p class="text-gray-600">Complete your profile to increase your chances of getting hired.</p>
-                <a href="#" class="text-sky-500 hover:text-sky-600 font-medium ml-4 whitespace-nowrap group">
-                    Complete Now <i class="fas fa-arrow-right ml-1 group-hover:transform group-hover:translate-x-1 transition-transform"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- Stats Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 card-hover mb-8 fade-in-up border border-gray-200" style="animation-delay: 0.3s">
-            <div class="flex items-center">
-                <div class="rounded-full bg-sky-100 p-3 mr-4">
-                    <i class="fas fa-file-alt text-sky-500"></i>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Applications</p>
-                    <h3 class="text-2xl font-bold text-gray-900">0</h3>
-                </div>
-            </div>
-            <div class="mt-4 text-sm text-gray-500 flex items-center">
-                <span>Start applying to jobs</span>
-            </div>
-        </div>
-
-        <!-- Two Column Layout -->
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Left Column -->
-            <div class="lg:w-2/3">
-                <!-- Recent Applications -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.4s">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-900">Recent Applications</h2>
-                        <a href="#" class="text-sky-500 hover:text-sky-600 text-sm font-medium">View All</a>
-                    </div>
-                    
-                    <!-- No applications message -->
-                    <div class="text-center py-8">
-                        <div class="text-gray-400 mb-3">
-                            <i class="fas fa-file-alt text-4xl animate-float"></i>
-                        </div>
-                        <h3 class="text-gray-700 font-medium mb-1">No applications yet</h3>
-                        <p class="text-gray-500 text-sm mb-6">Start applying to jobs to see your applications here</p>
-                        <a href="#" class="group relative px-6 py-3 rounded-full font-semibold text-white overflow-hidden inline-flex items-center">
-                            <div class="absolute inset-0 w-full h-full transition-all duration-300 bg-gradient-to-r from-sky-400 to-sky-500 group-hover:opacity-90"></div>
-                            <span class="relative flex items-center">
-                                <i class="fas fa-search mr-2"></i>
-                                Browse Jobs
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Recommended Jobs -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-8 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.5s">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-900">Recommended Jobs</h2>
-                        <a href="#" class="text-sky-500 hover:text-sky-600 text-sm font-medium">View All</a>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <!-- Job 1 -->
-                        <div class="job-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
-                            <div class="flex items-start">
-                                <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-900">Full Stack Developer</h3>
-                                    <p class="text-gray-600 text-sm">TechCorp • Boston, MA</p>
-                                    <div class="flex flex-wrap gap-2 mt-2">
-                                        <span class="bg-sky-100 text-sky-700 text-xs px-2 py-1 rounded-full">Full-time</span>
-                                        <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Remote</span>
-                                        <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">$120K-$150K</span>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-500 text-sm">Posted 2 days ago</p>
-                                    <div class="flex mt-2 space-x-2 justify-end">
-                                        <a href="#" class="text-sky-500 hover:text-sky-600 transition duration-300" title="View Job">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
+    <!-- Main Content -->
+    <main class="flex-grow py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Hero Section -->
+            <div class="card bg-white mb-8 wave-bg">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="mb-6 md:mb-0 md:max-w-xl">
+                            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+                                Welcome back, <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600">{{name}}</span>
+                            </h1>
+                            <p class="text-gray-600">Your journey to the perfect job continues. Let's make progress today!</p>
+                            
+                            <div class="mt-6 flex flex-wrap gap-3">
+                                <a href="{{url_for('Jobs')}}" class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-blue-600 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                                    <i class="fas fa-search mr-2"></i>
+                                    Find Jobs
+                                </a>
+                                <a href="#" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-medium shadow-sm hover:bg-primary-50 hover:shadow transition-all">
+                                    <i class="fas fa-user-edit mr-2"></i>
+                                    Update Profile
+                                </a>
                             </div>
                         </div>
                         
-                        <!-- Job 2 -->
-                        <div class="job-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
-                            <div class="flex items-start">
-                                <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-900">Product Manager</h3>
-                                    <p class="text-gray-600 text-sm">InnovateTech • Seattle, WA</p>
-                                    <div class="flex flex-wrap gap-2 mt-2">
-                                        <span class="bg-sky-100 text-sky-700 text-xs px-2 py-1 rounded-full">Full-time</span>
-                                        <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded-full">$130K-$160K</span>
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <div class="absolute -top-6 -right-6 w-24 h-24 bg-primary-100 rounded-full opacity-50"></div>
+                                <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-100 rounded-full opacity-50"></div>
+                                <div class="relative bg-white rounded-xl shadow-md p-4 border border-primary-100">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <h3 class="text-sm font-medium text-gray-900">Job Search Progress</h3>
+                                                <p class="text-xs text-gray-500">Last 30 days</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-gray-500 text-sm">Posted 1 week ago</p>
-                                    <div class="flex mt-2 space-x-2 justify-end">
-                                        <a href="#" class="text-sky-500 hover:text-sky-600 transition duration-300" title="View Job">
-                                            <i class="fas fa-arrow-right"></i>
-                                        </a>
+                                    <div class="space-y-2">
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span class="font-medium text-gray-700">Profile Completion</span>
+                                                <span class="text-primary-600 font-semibold">30%</span>
+                                            </div>
+                                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                                <div class="h-full bg-primary-500 rounded-full progress-bar" style="width: 30%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1">
+                                                <span class="font-medium text-gray-700">Applications</span>
+                                                <span class="text-primary-600 font-semibold">0</span>
+                                            </div>
+                                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                                <div class="h-full bg-primary-500 rounded-full progress-bar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -308,80 +401,510 @@
                 </div>
             </div>
             
-            <!-- Right Column -->
-            <div class="lg:w-1/3">
-                <!-- Quick Links -->
-                <div class="bg-white rounded-xl shadow-md p-6 card-hover fade-in-up border border-gray-200" style="animation-delay: 0.6s">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Links</h2>
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
-                                <i class="fas fa-user text-sky-500 mr-3 w-5 text-center"></i>
-                                <span>Complete Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
-                                <i class="fas fa-bell text-sky-500 mr-3 w-5 text-center"></i>
-                                <span>Job Alerts</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
-                                <i class="fas fa-cog text-sky-500 mr-3 w-5 text-center"></i>
-                                <span>Account Settings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center p-2 hover:bg-gray-50 rounded-md transition duration-300">
-                                <i class="fas fa-question-circle text-sky-500 mr-3 w-5 text-center"></i>
-                                <span>Help & Support</span>
-                            </a>
-                        </li>
-                    </ul>
+            <!-- Dashboard Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Job Recommendations -->
+                    <div class="card bg-white">
+                        <div class="border-b border-gray-100 p-6">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                    <span class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                    Recommended Jobs
+                                </h2>
+                                <a href="{{url_for('Jobs')}}" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    View All <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <!-- Job 1 -->
+                                <div class="job-card bg-white border border-gray-200 rounded-lg p-5 hover:border-primary-300">
+                                    <div class="flex flex-col sm:flex-row gap-4">
+                                        <!-- Company Logo -->
+                                        <div class="flex-shrink-0">
+                                            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl">
+                                                T
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Job Details -->
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-gray-900 text-lg">Full Stack Developer</h3>
+                                            <p class="text-gray-600 text-sm">TechCorp • Boston, MA</p>
+                                            
+                                            <div class="mt-3 flex flex-wrap gap-2">
+                                                <span class="skill-tag bg-primary-50 text-primary-700 text-xs px-2.5 py-1 rounded-full">
+                                                    <i class="fas fa-clock mr-1"></i> Full-time
+                                                </span>
+                                                <span class="skill-tag bg-green-50 text-green-700 text-xs px-2.5 py-1 rounded-full">
+                                                    <i class="fas fa-home mr-1"></i> Remote
+                                                </span>
+                                                <span class="skill-tag bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-full">
+                                                    <i class="fas fa-dollar-sign mr-1"></i> $120K-$150K
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="mt-4 flex justify-between items-center">
+                                                <span class="text-gray-500 text-xs">Posted 2 days ago</span>
+                                                <div class="flex gap-2">
+                                                    <button class="text-gray-400 hover:text-primary-500 transition-colors">
+                                                        <i class="far fa-bookmark"></i>
+                                                    </button>
+                                                    <a href="#" class="btn-gradient text-white text-sm font-medium px-3 py-1.5 rounded-lg">
+                                                        Apply Now
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Job 2 -->
+                                <div class="job-card bg-white border border-gray-200 rounded-lg p-5 hover:border-primary-300">
+                                    <div class="flex flex-col sm:flex-row gap-4">
+                                        <!-- Company Logo -->
+                                        <div class="flex-shrink-0">
+                                            <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xl">
+                                                I
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Job Details -->
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold text-gray-900 text-lg">Product Manager</h3>
+                                            <p class="text-gray-600 text-sm">InnovateTech • Seattle, WA</p>
+                                            
+                                            <div class="mt-3 flex flex-wrap gap-2">
+                                                <span class="skill-tag bg-primary-50 text-primary-700 text-xs px-2.5 py-1 rounded-full">
+                                                    <i class="fas fa-clock mr-1"></i> Full-time
+                                                </span>
+                                                <span class="skill-tag bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-full">
+                                                    <i class="fas fa-dollar-sign mr-1"></i> $130K-$160K
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="mt-4 flex justify-between items-center">
+                                                <span class="text-gray-500 text-xs">Posted 1 week ago</span>
+                                                <div class="flex gap-2">
+                                                    <button class="text-gray-400 hover:text-primary-500 transition-colors">
+                                                        <i class="far fa-bookmark"></i>
+                                                    </button>
+                                                    <a href="#" class="btn-gradient text-white text-sm font-medium px-3 py-1.5 rounded-lg">
+                                                        Apply Now
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Applications -->
+                    <div class="card bg-white">
+                        <div class="border-b border-gray-100 p-6">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                    <span class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                        <i class="fas fa-file-alt"></i>
+                                    </span>
+                                    Recent Applications
+                                </h2>
+                                <a href="{{url_for('My_applications')}}" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    View All <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- No applications message -->
+                            <div class="text-center py-10 dot-pattern rounded-xl">
+                                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-sm text-primary-500 mb-4 animate-float">
+                                    <i class="fas fa-file-alt text-2xl"></i>
+                                </div>
+                                <h3 class="text-gray-800 font-semibold mb-2">No applications yet</h3>
+                                <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">Start applying to jobs to track your application status and responses</p>
+                                <a href="{{url_for('Jobs')}}" class="btn-gradient inline-block px-6 py-2.5 text-white rounded-full font-medium shadow-md">
+                                    <i class="fas fa-search mr-2"></i>
+                                    Browse Jobs
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-8">
+                    <!-- Career Tips Carousel (Replacing Profile Completion) -->
+                    <div class="card bg-white overflow-hidden">
+                        <div class="bg-gradient-to-r from-primary-500 to-blue-600 text-white p-6">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-bold flex items-center">
+                                    <i class="fas fa-lightbulb mr-2"></i>
+                                    Career Tips
+                                </h2>
+                                <div class="flex space-x-2">
+                                    <button class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors" id="prevTip">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors" id="nextTip">
+                                        <i class="fas fa-chevron-right text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 tips-carousel" style="min-height: 280px;">
+                            <!-- Tip 1: Resume Tips -->
+                            <div class="tip-item active">
+                                <div class="flex items-start mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 flex-shrink-0">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Resume Optimization</h3>
+                                </div>
+                                
+                                <ul class="space-y-3 mb-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Tailor your resume for each job application</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Include relevant keywords from the job description</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Quantify achievements with specific metrics</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Keep your resume concise and well-formatted</p>
+                                    </li>
+                                </ul>
+                                
+                                <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    Learn more about resume optimization
+                                    <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Tip 2: Interview Preparation -->
+                            <div class="tip-item">
+                                <div class="flex items-start mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 flex-shrink-0">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Interview Preparation</h3>
+                                </div>
+                                
+                                <ul class="space-y-3 mb-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Research the company thoroughly before the interview</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Prepare examples using the STAR method</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Practice common interview questions</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Prepare thoughtful questions to ask the interviewer</p>
+                                    </li>
+                                </ul>
+                                
+                                <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    View interview preparation guide
+                                    <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Tip 3: Networking -->
+                            <div class="tip-item">
+                                <div class="flex items-start mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 flex-shrink-0">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Networking Strategies</h3>
+                                </div>
+                                
+                                <ul class="space-y-3 mb-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Attend industry events and conferences</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Connect with professionals on LinkedIn</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Request informational interviews</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Join professional groups and communities</p>
+                                    </li>
+                                </ul>
+                                
+                                <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    Explore networking opportunities
+                                    <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Tip 4: Skill Development -->
+                            <div class="tip-item">
+                                <div class="flex items-start mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 flex-shrink-0">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Skill Development</h3>
+                                </div>
+                                
+                                <ul class="space-y-3 mb-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">  Identify in-demand skills in your industry</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Take online courses and certifications</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Work on personal projects to build your portfolio</p>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <p class="text-sm text-gray-700">Volunteer for projects that develop new skills</p>
+                                    </li>
+                                </ul>
+                                
+                                <a href="#" class="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center">
+                                    Find learning resources
+                                    <i class="fas fa-arrow-right ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Job Search Stats (Modified) -->
+                    <div class="card bg-white">
+                        <div class="border-b border-gray-100 p-6">
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-chart-pie"></i>
+                                </span>
+                                Job Search Stats
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-primary-50 rounded-lg p-4 text-center">
+                                    <div class="text-3xl font-bold text-primary-600 mb-1">0</div>
+                                    <p class="text-xs text-gray-600">Applications</p>
+                                </div>
+                                <div class="bg-primary-50 rounded-lg p-4 text-center">
+                                    <div class="text-3xl font-bold text-primary-600 mb-1">0</div>
+                                    <p class="text-xs text-gray-600">Saved Jobs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card bg-white">
+                        <div class="border-b border-gray-100 p-6">
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-bolt"></i>
+                                </span>
+                                Quick Actions
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-3">
+                                <a href="#" class="flex flex-col items-center p-4 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-2">
+                                        <i class="fas fa-file-upload"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-gray-800">Upload Resume</span>
+                                </a>
+                                <a href="#" class="flex flex-col items-center p-4 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-2">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-gray-800">Job Alerts</span>
+                                </a>
+                                <a href="#" class="flex flex-col items-center p-4 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-2">
+                                        <i class="fas fa-user-edit"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-gray-800">Edit Profile</span>
+                                </a>
+                                <a href="#" class="flex flex-col items-center p-4 rounded-lg bg-primary-50 hover:bg-primary-100 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-2">
+                                        <i class="fas fa-question-circle"></i>
+                                    </div>
+                                    <span class="text-xs font-medium text-gray-800">Help Center</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Mobile Navigation -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10 shadow-lg">
+        <div class="flex justify-around">
+            <a href="#" class="flex flex-col items-center py-2 text-primary-600">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="{{url_for('Jobs')}}" class="flex flex-col items-center py-2 text-gray-500 hover:text-primary-600">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="fas fa-search"></i>
+                </div>
+                <span class="text-xs mt-1">Jobs</span>
+            </a>
+            <a href="{{url_for('My_applications')}}" class="flex flex-col items-center py-2 text-gray-500 hover:text-primary-600">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <span class="text-xs mt-1">Applications</span>
+            </a>
+            <a href="#" class="flex flex-col items-center py-2 text-gray-500 hover:text-primary-600">
+                <div class="w-6 h-6 flex items-center justify-center">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="text-xs mt-1">Profile</span>
+            </a>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-8 mt-auto">
-        <div class="container mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="mb-6 md:mb-0">
-                    <h3 class="text-xl font-bold mb-2">JobConnect</h3>
+                    <div class="flex items-center mb-4">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <span class="ml-3 text-xl font-bold">JobConnect</span>
+                    </div>
                     <p class="text-gray-400 text-sm">Connecting talented professionals with great companies.</p>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                     <div>
-                        <h4 class="text-lg font-semibold mb-3">For Job Seekers</h4>
+                        <h4 class="text-lg font-semibold mb-3 text-primary-300">For Job Seekers</h4>
                         <ul class="space-y-2 text-sm text-gray-400">
-                            <li><a href="#" class="hover:text-sky-400">Browse Jobs</a></li>
-                            <li><a href="#" class="hover:text-sky-400">Job Alerts</a></li>
-                            <li><a href="#" class="hover:text-sky-400">Career Advice</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Browse Jobs</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Job Alerts</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Career Advice</a></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 class="text-lg font-semibold mb-3">For Employers</h4>
+                        <h4 class="text-lg font-semibold mb-3 text-primary-300">For Employers</h4>
                         <ul class="space-y-2 text-sm text-gray-400">
-                            <li><a href="#" class="hover:text-sky-400">Post a Job</a></li>
-                            <li><a href="#" class="hover:text-sky-400">Browse Candidates</a></li>
-                            <li><a href="#" class="hover:text-sky-400">Pricing Plans</a></li>
-                            <li><a href="#" class="hover:text-sky-400">Recruitment Solutions</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Post a Job</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Browse Candidates</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Pricing Plans</a></li>
+                            <li><a href="#" class="hover:text-primary-300 transition-colors">Recruitment Solutions</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
-                <p>&copy; 2023 JobConnect. All rights reserved.</p>
+                <p>&copy; 2023 Naukri Dhondo. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Dropdown functionality
+            const dropdownButtons = document.querySelectorAll('.dropdown button');
+            const dropdownContents = document.querySelectorAll('.dropdown-content');
+            
+            dropdownButtons.forEach((button, index) => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdownContents[index].classList.toggle('hidden');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', () => {
+                dropdownContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+            });
+            
+            // Career Tips Carousel
+            const tipItems = document.querySelectorAll('.tip-item');
+            const prevTipBtn = document.getElementById('prevTip');
+            const nextTipBtn = document.getElementById('nextTip');
+            let currentTipIndex = 0;
+            
+            function showTip(index) {
+                tipItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Handle wrapping around
+                if (index < 0) {
+                    index = tipItems.length - 1;
+                } else if (index >= tipItems.length) {
+                    index = 0;
+                }
+                
+                currentTipIndex = index;
+                tipItems[currentTipIndex].classList.add('active');
+            }
+            
+            // Auto-rotate tips every 10 seconds
+            let tipInterval = setInterval(() => {
+                showTip(currentTipIndex + 1);
+            }, 10000);
+            
+            // Navigation buttons
+            prevTipBtn.addEventListener('click', () => {
+                clearInterval(tipInterval);
+                showTip(currentTipIndex - 1);
+                tipInterval = setInterval(() => {
+                    showTip(currentTipIndex + 1);
+                }, 10000);
+            });
+            
+            nextTipBtn.addEventListener('click', () => {
+                clearInterval(tipInterval);
+                showTip(currentTipIndex + 1);
+                tipInterval = setInterval(() => {
+                    showTip(currentTipIndex + 1);
+                }, 10000);
+            });
+            
             // Add intersection observer for smooth scroll animations
-            const cards = document.querySelectorAll('.fade-in-up');
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -390,13 +913,14 @@
                     }
                 });
             }, {
-                threshold: 0.1
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             });
 
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                observer.observe(card);
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                observer.observe(element);
             });
         });
     </script>

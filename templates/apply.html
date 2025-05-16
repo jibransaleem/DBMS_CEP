@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply for {{ job.job_title }} | JobConnect</title>
+    <title>Apply for {{ job.job_title }} | Naukri Dhondo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f7ff',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                    },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
@@ -22,283 +38,371 @@
                         slideIn: {
                             '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        wave: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(-25%)' },
+                            '100%': { transform: 'translateX(0)' }
                         }
                     },
                     animation: {
-                        float: 'float 5s ease-in-out infinite',
+                        float: 'float 6s ease-in-out infinite',
                         pulse: 'pulse 3s ease-in-out infinite',
-                        slideIn: 'slideIn 0.5s ease-out forwards'
+                        slideIn: 'slideIn 0.5s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        shimmer: 'shimmer 2s infinite',
+                        wave: 'wave 10s ease-in-out infinite'
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Card Hover Effects */
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
         }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        
+        /* Card styles */
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-
-        /* Gradient Border */
-        .gradient-border {
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Button styles */
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        /* Wave background */
+        .wave-bg {
             position: relative;
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
             overflow: hidden;
         }
-        .gradient-border::before {
+        
+        .wave-bg::before {
             content: '';
             position: absolute;
-            inset: -3px;
-            border-radius: 1.1rem;
-            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+            width: 200%;
+            height: 100%;
+            top: 60%;
+            left: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%230ea5e9'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%230ea5e9'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%230ea5e9'/%3E%3C/svg%3E");
+            background-size: 100% 100px;
+            background-repeat: no-repeat;
+            animation: wave 10s ease-in-out infinite;
+            opacity: 0.3;
         }
-        .gradient-border:hover::before {
-            opacity: 1;
+        
+        /* Skill tag styles */
+        .skill-tag {
+            transition: all 0.2s ease;
+            border-radius: 9999px;
         }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .fade-in-up {
-            animation: fadeInUp 0.7s ease-out forwards;
+        
+        /* Dot pattern background */
+        .dot-pattern {
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-color: #f0f9ff;
         }
-
-        /* Background Mesh */
-        .bg-mesh {
-            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
-            background-size: 40px 40px;
-            background-color: #f9fafb;
-        }
-
-        /* Status Colors */
+        
+        /* Status badges */
         .status-open {
             background: linear-gradient(90deg, #10b981, #34d399);
             color: white;
         }
+        
         .status-closed {
             background: linear-gradient(90deg, #ef4444, #f87171);
             color: white;
         }
+        
         .status-deadline {
             background: linear-gradient(90deg, #f59e0b, #fbbf24);
             color: white;
         }
-
-        /* Form Styling */
-        .form-container {
-            transition: all 0.3s ease;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-        }
-        .form-container:hover {
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .input-group {
+        
+        /* File upload styling */
+        .file-upload-container {
             position: relative;
-            transition: all 0.3s ease;
+            overflow: hidden;
+            display: inline-block;
+            cursor: pointer;
         }
-        .input-group:focus-within {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-            border-color: #3b82f6;
-        }
-        .input-group input,
-        .input-group input[type="file"] {
-            transition: all 0.2s ease;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-        .submit-btn {
-            background: linear-gradient(90deg, #3b82f6, #60a5fa);
-            color: white;
-            border-radius: 9999px;
-            padding: 0.75rem 2.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .submit-btn:hover {
-            background: linear-gradient(90deg, #60a5fa, #93c5fd);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        .skill-tag {
-            transition: all 0.2s ease;
-        }
-        .skill-tag:hover {
-            background-color: #dbeafe;
-            transform: scale(1.05);
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 640px) {
-            .max-w-4xl {
-                padding: 0 1rem;
-            }
-            .job-card {
-                padding: 1.5rem;
-            }
-            .form-container {
-                padding: 1.5rem;
-            }
+        
+        .file-upload-container input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
-<body class="bg-mesh min-h-screen p-8 antialiased">
-    <div class="max-w-4xl mx-auto">
+<body class="dot-pattern min-h-screen py-8 antialiased">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <header class="fade-in-up mb-12">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 flex items-center gap-4">
-                <i class="fas fa-briefcase text-blue-500 animate-pulse"></i>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
-                    Apply for {{ job.job_title }}
-                </span>
-            </h1>
-            <p class="mt-4 text-lg text-gray-600 max-w-2xl">
-                Submit your details and resume to seize this exciting opportunity with {{ job.company_name }}.
-            </p>
+        <header class="mb-8 animate-slideIn">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <span class="ml-3 text-xl font-bold text-gray-900">JobConnect</span>
+                </div>
+                <a href="{{ url_for('Jobs') }}" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-medium shadow-sm hover:bg-primary-50 hover:shadow transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Jobs
+                </a>
+            </div>
         </header>
-        <div class="max-w-4xl mx-auto mt-4">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="space-y-4">
-                        {% for category, message in messages %}
-                        <div class="p-4 rounded-lg border
-                            {% if category == 'warning' %}
-                                bg-red-100 text-red-800 border-red-200
-                            {% else %}
-                                bg-green-100 text-green-800 border-green-200
-                            {% endif %}">
-                            <p class="font-semibold">{{ message }}</p>
+        
+        <!-- Page Title -->
+        <div class="mb-8 animate-slideIn" style="animation-delay: 0.1s;">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+                Apply for <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600">{{ job.job_title }}</span>
+            </h1>
+            <p class="text-gray-600">Submit your details and resume to seize this exciting opportunity with {{ job.company_name }}.</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6 animate-slideIn" style="animation-delay: 0.2s;">
+                    {% for category, message in messages %}
+                        <div class="{% if category == 'warning' %}bg-red-50 border-l-4 border-red-500 text-red-800{% else %}bg-green-50 border-l-4 border-green-500 text-green-800{% endif %} p-4 mb-4 rounded-lg">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-{% if category == 'warning' %}exclamation-circle text-red-500{% else %}check-circle text-green-500{% endif %} text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium">{{ message }}</p>
+                                </div>
+                                <button class="ml-auto text-gray-400 hover:text-gray-500" onclick="this.parentElement.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                     {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Job Details Card -->
+        <div class="card bg-white wave-bg mb-8 animate-slideIn" style="animation-delay: 0.3s;">
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div class="flex-1">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Job Details</h2>
+                        
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="skill-tag px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full">
+                                <i class="fas fa-briefcase mr-1"></i> {{ job.job_type }}
+                            </span>
+                            <span class="skill-tag px-3 py-1 rounded-full text-xs font-medium
+                                    {% if job.job_status == 'open' %} status-open
+                                    {% elif job.job_status == 'closed' %} status-closed
+                                    {% else %} status-deadline {% endif %}">
+                                <i class="fas fa-circle-notch mr-1"></i> {{ job.job_status|capitalize }}
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-4 text-gray-600 text-sm mb-6">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Company</p>
+                                    <p class="font-medium text-gray-900">{{ job.company_name }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Location</p>
+                                    <p class="font-medium text-gray-900">{{ job.job_location }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Salary</p>
+                                    <p class="font-medium text-gray-900">{{ job.job_salary }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Industry</p>
+                                    <p class="font-medium text-gray-900">{{ job.job_industry }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Application Deadline</p>
+                                    <p class="font-medium text-gray-900">{{ job.job_deadline }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-2">
+                                    <i class="fas fa-align-left text-xs"></i>
+                                </span>
+                                Description
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed">{{ job.job_description }}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-2">
+                                    <i class="fas fa-code-branch text-xs"></i>
+                                </span>
+                                Required Skills
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                {% for skill in job.job_skills.split(',') %}
+                                    <span class="skill-tag px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full">
+                                        {{ skill.strip() }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
-            {% endwith %}
-        </div>
-
-        <!-- Job Card -->
-        <div class="gradient-border bg-white p-6 sm:p-8 card-hover rounded-xl mb-10 job-card animate-slideIn" style="animation-delay: 0.1s;">
-            <div class="flex flex-col mb-6">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-3 break-words">{{ job.job_title }}</h2>
-                <div class="flex flex-wrap items-center gap-3">
-                    <span class="px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                        {{ job.job_type }}
-                    </span>
-                    <span class="text-sm font-medium text-gray-500">{{ job.company_name }}</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600 mb-6">
-                <p class="flex items-center">
-                    <i class="fas fa-map-marker-alt w-6 text-blue-500 mr-2"></i>
-                    <span>{{ job.job_location }}</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-dollar-sign w-6 text-blue-500 mr-2"></i>
-                    <span>{{ job.job_salary }}</span>
-                </p>
-                <p class="flex items-center">
-                    <i class="fas fa-industry w-6 text-blue-500 mr-2"></i>
-                    <span>{{ job.job_industry }}</span>
-                </p>
-            </div>
-
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Description</h3>
-                <p class="text-gray-600 leading-relaxed">{{ job.job_description }}</p>
-            </div>
-
-            <!-- Job Status and Deadline -->
-            <div class="flex flex-wrap items-center gap-4 mb-6">
-                <span class="px-4 py-1.5 rounded-full text-xs font-semibold 
-                            {% if job.job_status == 'open' %} status-open {% elif job.job_status == 'closed' %} status-closed {% else %} status-deadline {% endif %}">
-                    {{ job.job_status | capitalize }}
-                </span>
-                <p class="text-sm text-gray-500 flex items-center">
-                    <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-                    Deadline: {{ job.job_deadline }}
-                </p>
-            </div>
-
-            <!-- Skills -->
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Required Skills</h3>
-                <div class="flex flex-wrap gap-2">
-                    {% for skill in job.job_skills.split(',') %}
-                        <span class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-medium rounded-full skill-tag">
-                            {{ skill.strip() }}
-                        </span>
-                    {% endfor %}
                 </div>
             </div>
         </div>
-
+        
         <!-- Application Form -->
-        <div class="form-container bg-white rounded-xl shadow-sm p-6 sm:p-8 animate-slideIn" style="animation-delay: 0.3s;">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Submit Your Application</h2>
-            <form method="POST" action="{{ url_for('apply_job', job_id=job.job_id) }}" enctype="multipart/form-data" class="space-y-6">
-                {{ form.hidden_tag() }}
+        <div class="card bg-white mb-8 animate-slideIn" style="animation-delay: 0.4s;">
+            <div class="p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-file-upload text-primary-500 mr-3"></i>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600">
+                        Submit Your Application
+                    </span>
+                </h2>
+                
+                <form method="POST" action="{{ url_for('apply_job', job_id=job.job_id) }}" enctype="multipart/form-data" class="space-y-6">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="bg-primary-50 rounded-xl p-6">
+                        <div class="mb-4">
+                            <label for="resume" class="block text-sm font-medium text-gray-700 mb-2">Upload Resume</label>
+                            <div class="flex items-center">
+                                <div class="file-upload-container w-full">
+                                    <div class="bg-white border border-gray-300 rounded-lg px-4 py-3 flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </div>
+                                            <span class="text-gray-500 text-sm" id="file-name">No file selected</span>
+                                        </div>
+                                        <button type="button" class="px-4 py-2 bg-primary-100 text-primary-700 rounded-lg text-sm font-medium hover:bg-primary-200 transition-colors">
+                                            Browse
+                                        </button>
+                                    </div>
+                                    {{ form.resume(class="absolute inset-0 opacity-0 cursor-pointer w-full h-full", onchange="updateFileName(this)") }}
+                                </div>
+                            </div>
+                            {% if form.resume.errors %}
+                                <p class="mt-2 text-sm text-red-600">{{ form.resume.errors[0] }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="text-sm text-gray-500">
+                            <p class="mb-2"><i class="fas fa-info-circle mr-1"></i> Accepted file formats: PDF, DOC, DOCX</p>
+                            <p><i class="fas fa-exclamation-triangle mr-1"></i> Maximum file size: 5MB</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        {{ form.submit(class="btn-gradient text-white px-6 py-3 rounded-lg font-medium inline-flex items-center") }}
+                    </div>
+                </form>
+            </div>
+        </div>
         
-        
-                <!-- Resume Upload -->
-                <div class="input-group border border-gray-200 rounded-lg bg-gray-50 p-4">
-                    <label for="resume" class="block text-sm font-medium text-gray-700 mb-2">Upload Resume</label>
-                    {{ form.resume(class_='block w-full text-gray-700 text-sm') }}
-                </div>
-                {% if form.resume.errors %}
-                    <p class="text-red-500 text-xs mt-1">{{ form.resume.errors[0] }}</p>
-                {% endif %}
-        
-                <!-- Submit Button -->
-                <div class="flex justify-end">
-                    {{ form.submit(class_='submit-btn') }}
-                </div>
-            </form>
+        <!-- Additional Actions -->
+        <div class="flex justify-center animate-slideIn" style="animation-delay: 0.5s;">
+            <a href="{{ url_for('Jobs') }}" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-medium shadow-sm hover:bg-primary-50 hover:shadow transition-all">
+                <i class="fas fa-search mr-2"></i>
+                Browse More Jobs
+            </a>
         </div>
     </div>
 
     <script>
+        // Update file name display
+        function updateFileName(input) {
+            const fileName = input.files[0] ? input.files[0].name : 'No file selected';
+            document.getElementById('file-name').textContent = fileName;
+        }
+        
         // Intersection Observer for Animations
-        const elements = document.querySelectorAll('.animate-slideIn');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-
-        elements.forEach(el => {
-            el.classList.add('opacity-0', 'translate-y-6');
-            observer.observe(el);
-        });
-
-        // Smooth Scroll for Anchor Links (if any)
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-slideIn');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
                 });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                observer.observe(element);
             });
         });
     </script>

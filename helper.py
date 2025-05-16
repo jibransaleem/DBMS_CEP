@@ -1,5 +1,7 @@
 import regex as re
 import phonenumbers
+    
+
 def is_strong_password(password):
     if len(password) < 8:
         return False
@@ -33,7 +35,7 @@ def validate_contact_number(number):
         if not re.match(pattern, number) or len(number)>13:
             return False
         if not number.startswith("+"):
-            number = f"+92{number}"
+            number = f"+92 {number[1:]}"
         parse_ = phonenumbers.parse(number, region)
         if phonenumbers.is_valid_number(parse_) and phonenumbers.region_code_for_number(parse_) == region:
                 return True

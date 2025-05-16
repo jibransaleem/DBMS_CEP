@@ -196,6 +196,16 @@ class EditPassword(FlaskForm):
         DataRequired(message="Please confirm your password"),
         EqualTo('company_password', message="Passwords must match")
     ])
+class SavedJobForm(FlaskForm):
+        notes = StringField('Notes', validators=[Length(max=500)])
+        reminder_date = DateField(
+            'Reminder Dead',
+            format='%Y-%m-%d',
+            validators=[DataRequired()]
+        )
+        submit = SubmitField('Saved')
+        
+    
     
     
     

@@ -1,24 +1,23 @@
 from flask import Flask, render_template, redirect, url_for, session, flash, request
-from forms import JobSeekerForm, RecruiterForm, Login, JobPostForm, JobApplicationForm,EditPassword, Edit_Company
+from forms import JobSeekerForm, RecruiterForm, Login, JobPostForm, JobApplicationForm,EditPassword, Edit_Company,SavedJobForm
 import bcrypt
 from models import db, Config, Candidate, Company, JobPosting, JobApplication, SavedJob 
 from datetime import datetime
 from sqlalchemy import func
 import os
+import secrets
+import time
 from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from helper import is_strong_password, is_valid_name,is_valid_company,validate_contact_number
 
+
 app = Flask(__name__, template_folder='templates', static_folder="static", static_url_path="/")
 app.config.from_object(Config)
 db.init_app(app)
-
 with app.app_context():
     db.create_all()
-
 migrate = Migrate(app, db)
-
-# ------------------ SIGNUP ROUTE ------------------
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -147,7 +146,8 @@ def candidate():
     if "user_id" not in session or session.get("Role") != "Candidate":
         flash("Please login as a Candidate to continue", "warning")
         return redirect(url_for("login"))
-    return render_template("cand.html")
+    candidate = db.session.query(Candidate).filter(Candidate.id == session['user_id']).first()
+    return render_template("cand.html", name = candidate.full_name)
 def get_latest_job_posting():
     latest_job = db.session.query(JobPosting).order_by(JobPosting.job_id.desc()).first()
     if latest_job is None:
@@ -284,7 +284,6 @@ def View_Jobs():
 def Jobs():
     job = JobPosting.query.all()
     return render_template("jobs.html", jobs=job)
-# isme glti arhi h 
 @app.route("/applyjob/<int:job_id>", methods=['GET', 'POST'])
 def apply_job(job_id):
     form = JobApplicationForm()
@@ -365,51 +364,97 @@ def recivedjobs():
         filters_applied=filters_applied
     )
 
+@app.route("/see_application/<int:job_id>", methods=['GET', 'POST'])
+def see_my_application(job_id):
+    result = (
+    db.session.query(JobPosting, JobApplication)
+    .join(JobApplication, JobApplication.job_id == JobPosting.job_id)
+    .filter(
+        JobApplication.candidate_id == session["user_id"],
+        JobPosting.job_id == job_id
+    )
+    .first()
+    )
+
+    if result:
+        job_posting, job_application = result
+        combined_data = {
+        # JobPosting fields
+        "job_id": job_posting.job_id,
+        "job_title": job_posting.job_title,
+        "job_description": job_posting.job_description,
+        "job_qualification": job_posting.job_qualification,
+        "job_location": job_posting.job_location,
+        "job_city": job_posting.job_city,
+        "job_industry": job_posting.job_industry,
+        "job_salary": job_posting.job_salary,
+        "job_skills": job_posting.job_skills,
+        "job_type": job_posting.job_type,
+        "job_dop": job_posting.job_dop,
+        "job_deadline": job_posting.job_deadline,
+        "job_status": job_posting.job_status,
+
+        # JobApplication fields
+        "application_id": job_application.id,
+        "candidate_id": job_application.candidate_id,
+        "apply_date": job_application.apply_date,
+    }
+    company_id =  job_posting.company_id
+    name = db.session.query(Company.company_name).filter(Company.id == company_id).first()
+    return render_template('view_appli.html', Application_data=combined_data,company_name = name )
+
 # ------------------ SAVED JOBS ROUTES ------------------
 
-@app.route("/save_job/<int:job_id>", methods=['POST'])
+
+@app.route("/save_job/<int:job_id>", methods=['GET','POST'])
 def save_job(job_id):
     if 'user_id' not in session or session.get('Role') != 'Candidate':
         flash('Please login as a Candidate to save jobs', 'warning')
         return redirect(url_for('login'))
+    form  = SavedJobForm()
     job = JobPosting.query.filter_by(job_id=job_id).first()
     if not job:
         flash('Job not found!', 'error')
         return redirect(url_for('jobs'))
-    existing_saved_job = SavedJob.query.filter_by(job_id=job_id, candidate_id=session['user_id']).first()
-    if existing_saved_job:
-        flash('This job is already saved!', 'warning')
-        return redirect(url_for('jobs'))
-    notes = request.form.get('notes', None)
-    reminder_date = request.form.get('reminder_date', None)
-    if reminder_date:
-        try:
-            reminder_date = datetime.strptime(reminder_date, '%Y-%m-%d').date()
-        except ValueError:
-            flash('Invalid reminder date format!', 'error')
+    data_to_send = {
+         "job_title" : job.job_title ,
+         "job_id" : job.job_id , 
+         "job_city" : job.job_city,
+         "job_salary" : job.job_salary,
+        "job_skills" : job.job_skills , 
+        "job_deadline":job.job_deadline
+    }
+    if request.method == "POST" :
+        existing_saved_job = SavedJob.query.filter_by(job_id=job_id, candidate_id=session['user_id']).first()
+        if existing_saved_job:
+            flash('This job is already saved!', 'warning')
             return redirect(url_for('jobs'))
-    saved_job = SavedJob(
-        candidate_id=session['user_id'],
-        job_id=job_id,
-        notes=notes,
-        reminder_date=reminder_date
-    )
-    db.session.add(saved_job)
-    db.session.commit()
-    flash('Job saved successfully!', 'success')
-    return redirect(url_for('jobs'))
+        if form.validate_on_submit():
+            notes = form.notes.data
+            reminder_date = form.reminder_date.data
+            saved_job = SavedJob(
+                candidate_id=session['user_id'],
+                job_id=job_id,
+                notes=notes,
+                reminder_date=reminder_date
+            )
+            db.session.add(saved_job)
+            db.session.commit()
+            flash('Job saved successfully!', 'success')
+            return redirect(url_for('Jobs'))
+    return render_template("saved_job.html ", form = form , data = data_to_send)
 
-@app.route("/saved_jobs")
-def saved_jobs():
-    if 'user_id' not in session or session.get('Role') != 'Candidate':
-        flash('Please login as a Candidate to view saved jobs', 'warning')
-        return redirect(url_for('login'))
-    saved_jobs = db.session.query(SavedJob, JobPosting, Company).\
-        join(JobPosting, SavedJob.job_id == JobPosting.job_id).\
-        join(Company, JobPosting.company_id == Company.id).\
-        filter(SavedJob.candidate_id == session['user_id']).\
-        all()
-    return render_template('saved_jobs.html', data=saved_jobs)
+# @app.route("/saved_jobs")
+# def saved_jobs():
+#     if 'user_id' not in session or session.get('Role') != 'Candidate':
+#         flash('Please login as a Candidate to view saved jobs', 'warning')
+#         return redirect(url_for('login'))
+#     saved_jobs = db.session.query(SavedJob, JobPosting, Company).\
+#         join(JobPosting, SavedJob.job_id == JobPosting.job_id).\
+#         join(Company, JobPosting.company_id == Company.id).\
+#         filter(SavedJob.candidate_id == session['user_id']).\
+#         all()
+#     return render_template('saved_jobs.html', data=saved_jobs)
 @app.route("/ChangePassword", methods=['GET', 'POST'])
 def Change_password():
     if "user_id" not in session.keys():
@@ -455,8 +500,7 @@ def Change_password():
             return render_template("change_Password.html", EditForm=EditForm)
 
     return render_template("change_Password.html", EditForm=EditForm)
-            
-    # ------------------ RUN APP ------------------
 
 if __name__ == '__main__':
     app.run(debug=True)
+    

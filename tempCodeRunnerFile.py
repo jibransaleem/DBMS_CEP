@@ -1,1 +1,1 @@
-job_skills
+company_name

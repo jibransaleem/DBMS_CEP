@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Applied Jobs | JobConnect</title>
+    <title>My Applications | JobConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f7ff',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                    },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
@@ -22,244 +37,299 @@
                         slideIn: {
                             '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        wave: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(-25%)' },
+                            '100%': { transform: 'translateX(0)' }
                         }
                     },
                     animation: {
-                        float: 'float 5s ease-in-out infinite',
+                        float: 'float 6s ease-in-out infinite',
                         pulse: 'pulse 3s ease-in-out infinite',
-                        slideIn: 'slideIn 0.5s ease-out forwards'
+                        slideIn: 'slideIn 0.5s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        shimmer: 'shimmer 2s infinite',
+                        wave: 'wave 10s ease-in-out infinite'
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Card Hover Effects */
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
         }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-
-        /* Gradient Border */
-        .gradient-border {
-            position: relative;
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+        
+        .job-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
             overflow: hidden;
         }
-        .gradient-border::before {
+        
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-bar {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
             content: '';
             position: absolute;
-            inset: -3px;
-            border-radius: 1.1rem;
-            background: linear-gradient(45deg, #3b82f6, #60a5fa, #93c5fd, #3b82f6);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.4) 50%, 
+                rgba(255,255,255,0) 100%);
+            animation: shimmer 2s infinite;
         }
-        .gradient-border:hover::before {
-            opacity: 1;
+        
+        .wave-bg {
+            position: relative;
+            overflow: hidden;
         }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .wave-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            top: 60%;
+            left: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%230ea5e9'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%230ea5e9'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%230ea5e9'/%3E%3C/svg%3E");
+            background-size: 100% 100px;
+            background-repeat: no-repeat;
+            animation: wave 10s ease-in-out infinite;
+            opacity: 0.3;
         }
-        .fade-in-up {
-            animation: fadeInUp 0.7s ease-out forwards;
+        
+        .skill-tag {
+            transition: all 0.2s ease;
+            border-radius: 9999px;
         }
-        .animate-slideIn {
-            animation: slideIn 0.5s ease-out forwards;
+        
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        /* Background Mesh */
-        .bg-mesh {
-            background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
-            background-size: 40px 40px;
-            background-color: #f9fafb;
+        
+        .dot-pattern {
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-color: #f0f9ff;
         }
-
-        /* Status Colors */
+        
         .status-open {
             background: linear-gradient(90deg, #10b981, #34d399);
             color: white;
         }
+        
         .status-closed {
             background: linear-gradient(90deg, #ef4444, #f87171);
             color: white;
         }
+        
         .status-deadline {
             background: linear-gradient(90deg, #f59e0b, #fbbf24);
             color: white;
         }
-
-        /* Search Bar */
-        .search-bar {
-            transition: all 0.3s ease;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-        }
-        .search-bar:focus-within {
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-            border-color: #3b82f6;
-        }
-
-        /* Skill Tags */
-        .skill-tag {
-            transition: all 0.2s ease;
-        }
-        .skill-tag:hover {
-            background-color: #dbeafe;
-            transform: scale(1.05);
-        }
-
-        /* Pagination */
+        
         .pagination-btn {
-            background: linear-gradient(90deg, #3b82f6, #60a5fa);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
             transition: all 0.3s ease;
         }
-        .pagination-btn:hover {
-            background: linear-gradient(90deg, #1d4ed8, #2563eb);
-            transform: translateY(-1px);
-        }
-        .pagination-btn.disabled {
-            background: #d1d5db;
-            cursor: not-allowed;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 640px) {
-            .max-w-7xl {
-                padding: 0 1rem;
-            }
-            .job-card {
-                padding: 1.5rem;
-            }
-            .search-bar {
-                padding: 0.5rem;
-            }
+        
+        .pagination-btn:not(.disabled):hover {
+            transform: translateY(-2px);
         }
     </style>
 </head>
-<body class="bg-mesh min-h-screen p-8 antialiased">
-    <div class="max-w-7xl mx-auto">
+<body class="dot-pattern min-h-screen py-8 antialiased">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
-        <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 space-y-6 sm:space-y-0 animate-slideIn">
-            <div>
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 flex items-center gap-4">
-                    <i class="fas fa-briefcase text-blue-500 animate-pulse"></i>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700">
-                        My Applied Jobs
-                    </span>
-                </h1>
-                <p class="mt-4 text-lg text-gray-600 max-w-2xl">
-                    View all the opportunities you've applied for.
-                </p>
-            </div>
-            <a href="/profile" class="px-6 py-3 rounded-lg font-semibold flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700">
-                <i class="fas fa-user mr-2"></i> My Profile
-            </a>
-        </header>
-
-        <!-- Search Section -->
-        <div class="mb-10 bg-white rounded-xl shadow-sm p-6 animate-slideIn" style="animation-delay: 0.1s;">
-            <div class="search-bar border border-gray-200 rounded-lg flex items-center px-4 py-3">
-                <i class="fas fa-search text-gray-400 mr-3"></i>
-                <input type="text" placeholder="Search your applied jobs by title, company, or location..."
-                       class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400"
-                       id="jobSearch">
-            </div>
-        </div>
-
-        <!-- Job Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for job in data %}
-                <div class="gradient-border bg-white p-6 card-hover rounded-xl job-card animate-slideIn"
-                     style="animation-delay: {{ loop.index * 0.1 }}s;">
-                    <div class="flex flex-col mb-5">
-                        <h2 class="text-2xl font-bold text-gray-900 leading-tight mb-2 break-words">{{ job[0].job_title }}</h2>
-                        <div class="flex flex-wrap items-center gap-3">
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                                {{ job[0].job_type }}
-                            </span>
-                            <span class="text-sm font-medium text-gray-500">{{ job[2].company_name }}</span>
+        <header class="mb-10 animate-slideIn">
+            <div class="card bg-white wave-bg mb-8">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="mb-6 md:mb-0">
+                            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+                                My <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600">Applications</span>
+                            </h1>
+                            <p class="text-gray-600">View all the jobs you've applied to and track your progress.</p>
+                            <div class="mt-6 flex flex-wrap gap-3">
+                                <a href="{{ url_for('candidate') }}" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-medium shadow-sm hover:bg-primary-50 hover:shadow transition-all">
+                                    <i class="fas fa-arrow-left mr-2"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <div class="absolute -top-6 -right-6 w-24 h-24 bg-primary-100 rounded-full opacity-50"></div>
+                                <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-100 rounded-full opacity-50"></div>
+                                <div class="relative bg-white rounded-xl shadow-md p-4 border border-primary-100">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <h3 class="text-sm font-medium text-gray-900">Application Tips</h3>
+                                                <p class="text-xs text-gray-500">Manage your applications</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"></i>
+                                            <p class="text-xs text-gray-700">Keep your resume updated</p>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <i class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"></i>
+                                            <p class="text-xs text-gray-700">Track application statuses</p>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <i class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"></i>
+                                            <p class="text-xs text-gray-700">Follow up with employers</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </header>
 
-                    <div class="space-y-3 text-gray-600">
-                        <p class="flex items-center">
-                            <i class="fas fa-map-marker-alt w-5 text-blue-500 mr-2"></i>
-                            <span>
-                                {{ job[0].job_location }}
-                                {% if job[0].job_city %}
-                                    , {{ job[0].job_city }}
-                                {% endif %}
-                            </span>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-dollar-sign w-5 text-blue-500 mr-2"></i>
-                            <span>{{ job[0].job_salary }}</span>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-industry w-5 text-blue-500 mr-2"></i>
-                            <span>{{ job[0].job_industry }}</span>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-calendar-check w-5 text-blue-500 mr-2"></i>
-                            <span>Applied on: {{ job[1].apply_date | default('N/A') }}</span>
-                        </p>
+        <!-- Job Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for job_posting, job_application, company in data %}
+                <div class="job-card bg-white border border-gray-200 rounded-xl p-6 hover:border-primary-300 animate-slideIn" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                    <div class="flex items-start mb-4">
+                        <div class="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600 mr-4 flex-shrink-0">
+                            <i class="fas fa-briefcase text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 leading-tight mb-1">{{ job_posting.job_title }}</h2>
+                            <p class="text-gray-600 text-sm">{{ company.company_name }}</p>
+                        </div>
                     </div>
-
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                            {{ job[0].job_description }}
-                        </p>
-                    </div>
-
-                    <!-- Job Status and Deadline -->
-                    <div class="mt-4 flex flex-wrap items-center gap-3">
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                    {% if job[0].job_status == 'open' %} status-open
-                                    {% elif job[0].job_status == 'closed' %} status-closed
-                                    {% else %} status-deadline {% endif %}">
-                            {{ job[0].job_status | capitalize }}
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full skill-tag">
+                            {{ job_posting.job_type }}
                         </span>
-                        <p class="text-sm text-gray-500 flex items-center">
-                            <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-                            Deadline: {{ job[0].job_deadline }}
-                        </p>
+                        <span class="px-3 py-1 rounded-full text-xs font-medium
+                            {% if job_application.application_status|lower == 'open' %} status-open
+                            {% elif job_application.application_status|lower == 'closed' %} status-closed
+                            {% elif job_application.application_status|lower == 'pending' %} status-deadline
+                            {% else %} bg-gray-100 text-gray-800 {% endif %}">
+                            {{ job_application.application_status|capitalize }}
+                </span>
                     </div>
-
+                    
+                    <div class="space-y-3 text-gray-600 text-sm mb-4">
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                <i class="fas fa-map-marker-alt text-xs"></i>
+                            </div>
+                            <span>{{ job_posting.job_location }}{% if job_posting.job_city %}, {{ job_posting.job_city }}{% endif %}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                <i class="fas fa-dollar-sign text-xs"></i>
+                            </div>
+                            <span>{{ job_posting.job_salary }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                <i class="fas fa-industry text-xs"></i>
+                            </div>
+                            <span>{{ job_posting.job_industry }}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-5 h-5 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                <i class="fas fa-calendar-alt text-xs"></i>
+                            </div>
+                            <span>Applied on: {{ job_application.apply_date.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 line-clamp-2">{{ job_posting.job_description }}</p>
+                    </div>
+                    
                     <!-- Skills -->
-                    <div class="flex flex-wrap gap-2 mt-4">
-                        {% for skill in job[0].job_skills.split(',') %}
-                            <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full skill-tag">
+                    <div class="flex flex-wrap gap-2 mb-5">
+                        {% for skill in job_posting.job_skills.split(',')[:3] %}
+                            <span class="skill-tag px-3 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full">
                                 {{ skill.strip() }}
                             </span>
                         {% endfor %}
+                        {% if job_posting.job_skills.split(',')|length > 3 %}
+                            <span class="skill-tag px-3 py-1 bg-gray-50 text-gray-700 text-xs font-medium rounded-full">
+                                +{{ job_posting.job_skills.split(',')|length - 3 }} more
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex justify-between items-center">
+                        <button class="text-gray-400 hover:text-primary-500 transition-colors">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <a href="{{ url_for('see_my_application', job_id=job_posting.job_id) }}" class="btn-gradient text-white text-sm font-medium px-4 py-2 rounded-lg inline-flex items-center">
+                            View Details <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
                     </div>
                 </div>
             {% else %}
-                <div class="col-span-full text-center py-20 animate-slideIn">
+                <div class="col-span-full text-center py-16 animate-slideIn">
                     <div class="max-w-md mx-auto">
-                        <i class="fas fa-clipboard-list text-7xl text-gray-300 mb-4 animate-float"></i>
-                        <h3 class="text-3xl font-bold text-gray-900 mb-3">No Applied Jobs</h3>
-                        <p class="text-gray-600 mb-6">You haven't applied to any jobs yet. Explore opportunities now!</p>
-                        <a href="/jobs" class="px-6 py-3 rounded-lg font-semibold inline-flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700">
-                            <i class="fas fa-briefcase mr-2"></i> Explore Jobs
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-100 text-primary-500 mb-6 animate-float">
+                            <i class="fas fa-briefcase text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">No Applications Yet</h3>
+                        <p class="text-gray-600 mb-6">You haven't applied to any jobs yet. Explore opportunities and start applying!</p>
+                        <a href="{{ url_for('candidate') }}" class="btn-gradient text-white px-6 py-3 rounded-lg font-medium inline-flex items-center">
+                            <i class="fas fa-search mr-2"></i> Explore Jobs
                         </a>
                     </div>
                 </div>
@@ -269,11 +339,11 @@
         <!-- Pagination -->
         {% if data and data|length > 0 %}
             <div class="mt-12 flex justify-center items-center gap-4 animate-slideIn">
-                <button class="pagination-btn disabled" id="prevPage">
+                <button class="pagination-btn disabled bg-gray-100 text-gray-400 px-4 py-2 rounded-lg font-medium flex items-center" id="prevPage">
                     <i class="fas fa-chevron-left mr-2"></i> Previous
                 </button>
-                <span class="text-gray-600 font-medium">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
-                <button class="pagination-btn" id="nextPage">
+                <span class="text-gray-700 font-medium">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                <button class="pagination-btn btn-gradient text-white px-4 py-2 rounded-lg font-medium flex items-center" id="nextPage">
                     Next <i class="fas fa-chevron-right ml-2"></i>
                 </button>
             </div>
@@ -282,38 +352,24 @@
 
     <script>
         // Intersection Observer for Animations
-        const elements = document.querySelectorAll('.animate-slideIn');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-slideIn');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             });
-        }, {
-            threshold: 0.1
-        });
 
-        elements.forEach(el => {
-            el.classList.add('opacity-0', 'translate-y-6');
-            observer.observe(el);
-        });
-
-        // Client-Side Search Functionality
-        const searchInput = document.getElementById('jobSearch');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const jobCards = document.querySelectorAll('.job-card');
-
-            jobCards.forEach(card => {
-                const title = card.querySelector('h2').textContent.toLowerCase();
-                const company = card.querySelector('.text-sm.font-medium.text-gray-500')?.textContent.toLowerCase() || '';
-                const location = card.querySelector('.space-y-3 p:first-child span').textContent.toLowerCase();
-
-                if (title.includes(searchTerm) || company.includes(searchTerm) || location.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                observer.observe(element);
             });
         });
 
@@ -337,8 +393,21 @@
                 card.style.display = cardPage === currentPage ? 'block' : 'none';
             });
 
-            if (prevBtn) prevBtn.classList.toggle('disabled', currentPage === 1);
-            if (nextBtn) nextBtn.classList.toggle('disabled', currentPage === totalPages);
+            if (prevBtn) {
+                prevBtn.classList.toggle('disabled', currentPage === 1);
+                prevBtn.classList.toggle('bg-gray-100', currentPage === 1);
+                prevBtn.classList.toggle('text-gray-400', currentPage === 1);
+                prevBtn.classList.toggle('btn-gradient', currentPage !== 1);
+                prevBtn.classList Développement Webtoggle('text-white', currentPage !== 1);
+            }
+            
+            if (nextBtn) {
+                nextBtn.classList.toggle('disabled', currentPage === totalPages);
+                nextBtn.classList.toggle('bg-gray-100', currentPage === totalPages);
+                nextBtn.classList.toggle('text-gray-400', currentPage === totalPages);
+                nextBtn.classList.toggle('btn-gradient', currentPage !== totalPages);
+                nextBtn.classList.toggle('text-white', currentPage !== totalPages);
+            }
         }
 
         if (document.getElementById('prevPage')) {
