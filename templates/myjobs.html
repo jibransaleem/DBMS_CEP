@@ -194,15 +194,15 @@
                             </h1>
                             <p class="text-gray-600">View all the jobs you've applied to and track your progress.</p>
                             <div class="mt-6 flex flex-wrap gap-3">
-                                <a href="{{ url_for('candidate') }}" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-primary-200 text-primary-600 font-medium shadow-sm hover:bg-primary-50 hover:shadow transition-all">
-                                    <i class="fas fa-arrow-left mr-2"></i>
-                                    Back to Dashboard
+                                <a href="{{url_for("candidate")}}" class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-500 to-blue-600 text-white font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                                    <i class="fas fa-user mr-2"></i>
+                                    Move To Dashboard 
                                 </a>
                             </div>
                         </div>
                         <div class="hidden md:block">
                             <div class="relative">
-                                <div class="absolute -top-6 -right-6 w-24 h-24 bg-primary-100 rounded-full opacity-50"></div>
+                                <div class="absolute -top6 -right-6 w-24 h-24 bg-primary-100 rounded-full opacity-50"></div>
                                 <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-100 rounded-full opacity-50"></div>
                                 <div class="relative bg-white rounded-xl shadow-md p-4 border border-primary-100">
                                     <div class="flex items-center justify-between mb-3">

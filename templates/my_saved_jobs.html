@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Save Job | Naukri Dhondo</title>
+    <title>Saved Jobs | Naukri Dhondo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -108,10 +108,14 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
         }
-        .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        .job-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
@@ -127,6 +131,10 @@
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
+        }
+        .dot-pattern {
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+            background-size: 20px 20px;
         }
         .glass-effect {
             background: rgba(255, 255, 255, 0.8);
@@ -198,7 +206,7 @@
                     <a href="{{ url_for('jobs') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Dashboard</a>
                     <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Browse Jobs</a>
                     <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Companies</a>
-                    <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Saved Jobs</a>
+                    <a href="#" class="text-primary-600 font-medium border-b-2 border-primary-500 pb-0.5">Saved Jobs</a>
                     <a href="#" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Profile</a>
                 </nav>
                 
@@ -238,7 +246,7 @@
                         <span class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3 shadow-md">
                             <i class="fas fa-bookmark"></i>
                         </span>
-                        Save Job
+                        Saved Jobs
                     </h1>
                     
                     <div class="mt-4 md:mt-0">
@@ -249,163 +257,141 @@
                     </div>
                 </div>
 
-                <!-- Job Information Card -->
-                <div class="bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl p-6 mb-8 border border-primary-100 shadow-md">
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <!-- Company Logo Placeholder -->
-                        <div class="flex-shrink-0">
-                            <div class="w-20 h-20 rounded-lg bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-600 font-bold text-3xl shadow-md">
-                                {{ data.company_name[0]|upper }}
-                            </div>
-                        </div>
-                        
-                        <!-- Job Details -->
-                        <div class="flex-1">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ data.job_title }}</h2>
-                            <div class="flex items-center text-gray-700 mb-4">
-                                <span class="font-semibold">{{ data.company_name }}</span>
-                                <span class="mx-2">•</span>
-                                <span class="flex items-center"><i class="fas fa-map-marker-alt text-gray-400 mr-1"></i> {{ data.job_city }}</span>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                                <div class="flex items-center bg-white/60 p-3 rounded-lg shadow-sm">
-                                    <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
-                                        <i class="fas fa-dollar-sign"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-gray-500">Salary</p>
-                                        <p class="text-sm font-medium text-gray-800">{{ data.job_salary }}</p>
-                                    </div>
-                                </div>
+                <!-- Saved Jobs List -->
+                {% if data %}
+                    <div class="space-y-6">
+                        {% for saved_job in data %}
+                            <div class="job-card bg-white border border-gray-200 rounded-lg p-6 hover:border-primary-300 shadow-sm hover:shadow-md relative overflow-hidden group">
+                                <!-- Decorative accent -->
+                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-400 to-primary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
                                 
-                                <div class="flex items-center bg-white/60 p-3 rounded-lg shadow-sm">
-                                    <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
-                                        <i class="fas fa-calendar-alt"></i>
+                                <div class="flex flex-col sm:flex-row gap-5">
+                                    <!-- Company Logo Placeholder -->
+                                    <div class="flex-shrink-0">
+                                        <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-600 font-bold text-2xl shadow-md">
+                                            {{ saved_job.company_name[0]|upper }}
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="text-xs text-gray-500">Deadline</p>
-                                        <p class="text-sm font-medium text-gray-800">{{ data.job_deadline }}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center bg-white/60 p-3 rounded-lg shadow-sm md:col-span-1">
-                                    <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
-                                        <i class="fas fa-code"></i>
-                                    </div>
-                                    <div class="overflow-hidden">
-                                        <p class="text-xs text-gray-500">Skills</p>
-                                        <p class="text-sm font-medium text-gray-800 truncate">{{ data.job_skills }}</p>
+                                    <!-- Job Details -->
+                                    <div class="flex-1">
+                                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                            <h3 class="font-bold text-gray-900 text-xl">{{ saved_job.job_title }}</h3>
+                                            <span class="mt-2 sm:mt-0 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-50 text-primary-700">
+                                                Saved <i class="fas fa-bookmark ml-1"></i>
+                                            </span>
+                                        </div>
+                                        
+                                        <p class="text-gray-600 mt-1 flex items-center">
+                                            <span class="font-medium">{{ saved_job.company_name }}</span>
+                                            <span class="mx-2">•</span>
+                                            <span class="flex items-center"><i class="fas fa-map-marker-alt text-gray-400 mr-1"></i> {{ saved_job.job_city }}</span>
+                                        </p>
+                                        
+                                        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                                                <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-500">Location</p>
+                                                    <p class="text-sm font-medium text-gray-800">{{ saved_job.job_location }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                                                <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                                    <i class="fas fa-dollar-sign"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-500">Salary</p>
+                                                    <p class="text-sm font-medium text-gray-800">{{ saved_job.job_salary }}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-center bg-gray-50 p-3 rounded-lg">
+                                                <div class="w-8 h-8 rounded-full bg-primary-50 flex items-center justify-center text-primary-500 mr-3">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs text-gray-500">Saved Date</p>
+                                                    <p class="text-sm font-medium text-gray-800">{{ saved_job.saved_at.strftime('%b %d, %Y') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if saved_job.notes %}
+                                        <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-sticky-note text-yellow-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm font-medium text-yellow-800">Your Notes</h3>
+                                                    <div class="mt-2 text-sm text-yellow-700">
+                                                        <p>{{ saved_job.notes }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="mt-5 flex justify-end pt-4 border-t border-gray-100">
+                                            <span class="text-gray-500 text-xs flex items-center">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                Saved on {{ saved_job.saved_at.strftime('%b %d, %Y %H:%M') }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Skills Tags -->
-                            <div class="mt-5 flex flex-wrap gap-2">
-                                {% for skill in data.job_skills.split(',')[:5] %}
-                                    <span class="px-3 py-1 bg-white/70 text-primary-700 text-xs font-medium rounded-full shadow-sm">
-                                        {{ skill.strip() }}
-                                    </span>
-                                {% endfor %}
-                                {% if data.job_skills.split(',')|length > 5 %}
-                                    <span class="px-3 py-1 bg-gray-50 text-gray-700 text-xs font-medium rounded-full shadow-sm">
-                                        +{{ data.job_skills.split(',')|length - 5 }} more
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                </div>
-
-                <!-- Save Job Form -->
-                <div class="bg-white rounded-xl border border-gray-100 p-6 shadow-md">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <span class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
-                            <i class="fas fa-sticky-note"></i>
-                        </span>
-                        Add Notes and Reminder
-                    </h3>
-                    
-                    <form method="POST" action="{{ url_for('save_job', job_id=data.job_id) }}" class="space-y-6">
-                        {{ form.hidden_tag() }}
-
-                        <div>
-                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class="fas fa-pen-fancy text-primary-500 mr-2"></i>
-                                Notes
-                            </label>
-                            <div class="relative">
-                                {{ form.notes(class="form-textarea w-full px-4 py-3 rounded-lg border border-gray-300 custom-scrollbar focus:ring-2 focus:ring-primary-300 focus:border-primary-500 transition-all", rows="4", placeholder="Add your notes about this job application...") }}
-                                <div class="absolute bottom-3 right-3 text-gray-400 text-xs">
-                                    <i class="fas fa-info-circle"></i> Add details about why you're interested or questions to ask
-                                </div>
-                            </div>
-                            {% if form.notes.errors %}
-                                {% for error in form.notes.errors %}
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endif %}
+                {% else %}
+                    <!-- No Saved Jobs Message -->
+                    <div class="text-center py-16 dot-pattern rounded-xl bg-primary-50/30">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-md text-primary-500 mb-6 animate-float">
+                            <i class="fas fa-bookmark text-3xl"></i>
                         </div>
-
-                        <div>
-                            <label for="reminder_date" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class="fas fa-bell text-primary-500 mr-2"></i>
-                                Reminder Date
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-calendar text-gray-400"></i>
-                                </div>
-                                {{ form.reminder_date(class="form-input w-full pl-10 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-300 focus:border-primary-500 transition-all", placeholder="Select a date to be reminded") }}
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-clock text-gray-400"></i>
-                                </div>
-                            </div>
-                            {% if form.reminder_date.errors %}
-                                {% for error in form.reminder_date.errors %}
-                                    <p class="mt-1 text-sm text-red-600 flex items-center">
-                                        <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endif %}
-                            <p class="mt-1 text-xs text-gray-500">We'll send you a reminder on this date to follow up on your application</p>
+                        <h3 class="text-2xl text-gray-800 font-bold mb-3">No saved jobs yet</h3>
+                        <p class="text-gray-600 mb-8 max-w-md mx-auto">Save jobs you're interested in to track them here and apply when you're ready.</p>
+                        <a href="{{ url_for('jobs') }}" class="btn-gradient inline-flex items-center px-6 py-3 text-white rounded-full font-medium shadow-md hover:shadow-lg transition-all">
+                            <i class="fas fa-search mr-2"></i>
+                            Browse Jobs
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Job Search Tips Section -->
+            <div class="mt-8 bg-white rounded-xl p-6 shadow-soft glass-effect">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
+                        <i class="fas fa-lightbulb"></i>
+                    </span>
+                    Job Search Tips
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-primary-50 to-blue-50 p-5 rounded-lg border border-primary-100 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-3 shadow-sm">
+                            <i class="fas fa-star"></i>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100">
-                            <button type="submit" class="btn-gradient text-white px-6 py-3 rounded-lg font-medium flex items-center justify-center shadow-md hover:shadow-lg transition-all">
-                                <i class="fas fa-bookmark mr-2"></i> Save Job
-                            </button>
-                            <a href="{{ url_for('jobs') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium shadow-sm hover:bg-gray-50 hover:text-gray-900 transition-all">
-                                <i class="fas fa-times mr-2"></i> Cancel
-                            </a>
+                        <h3 class="font-semibold text-gray-900 mb-2">Organize Your Search</h3>
+                        <p class="text-gray-600 text-sm">Save jobs that match your skills and interests to keep track of opportunities.</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-primary-50 to-blue-50 p-5 rounded-lg border border-primary-100 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-3 shadow-sm">
+                            <i class="fas fa-file-alt"></i>
                         </div>
-                    </form>
-                </div>
-                
-                <!-- Tips Section -->
-                <div class="mt-8 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-6 border border-yellow-100 shadow-sm">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                        <span class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
-                            <i class="fas fa-lightbulb"></i>
-                        </span>
-                        Tips for Saving Jobs
-                    </h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                            <span>Add detailed notes about why you're interested in this position</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                            <span>Set a reminder a few days before the application deadline</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                            <span>Research the company before applying to customize your application</span>
-                        </li>
-                    </ul>
+                        <h3 class="font-semibold text-gray-900 mb-2">Tailor Your Resume</h3>
+                        <p class="text-gray-600 text-sm">Customize your resume for each application to highlight relevant skills and experience.</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-primary-50 to-blue-50 p-5 rounded-lg border border-primary-100 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-primary-600 mb-3 shadow-sm">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">Set Job Alerts</h3>
+                        <p class="text-gray-600 text-sm">Create job alerts to get notified when new positions matching your criteria are posted.</p>
+                    </div>
                 </div>
             </div>
         </main>
@@ -481,7 +467,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Add intersection observer for smooth scroll animations
-            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up, .animate-float');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -500,39 +486,17 @@
                 observer.observe(element);
             });
             
-            // Enhance form elements
-            const formInputs = document.querySelectorAll('.form-input, .form-textarea');
-            formInputs.forEach(input => {
-                // Add focus effect
-                input.addEventListener('focus', function() {
-                    this.parentElement.classList.add('ring-2', 'ring-primary-100');
+            // Add hover effect to job cards
+            const jobCards = document.querySelectorAll('.job-card');
+            jobCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.classList.add('shadow-md');
                 });
                 
-                input.addEventListener('blur', function() {
-                    this.parentElement.classList.remove('ring-2', 'ring-primary-100');
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('shadow-md');
                 });
             });
-            
-            // Character counter for notes textarea
-            const notesTextarea = document.querySelector('textarea[name="notes"]');
-            if (notesTextarea) {
-                const maxLength = 500; // Set your desired max length
-                const counterDiv = document.createElement('div');
-                counterDiv.className = 'text-xs text-gray-500 mt-1 text-right';
-                counterDiv.innerHTML = `0/${maxLength} characters`;
-                notesTextarea.parentElement.appendChild(counterDiv);
-                
-                notesTextarea.addEventListener('input', function() {
-                    const currentLength = this.value.length;
-                    counterDiv.innerHTML = `${currentLength}/${maxLength} characters`;
-                    
-                    if (currentLength > maxLength) {
-                        counterDiv.classList.add('text-red-500');
-                    } else {
-                        counterDiv.classList.remove('text-red-500');
-                    }
-                });
-            }
         });
     </script>
 </body>

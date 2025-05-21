@@ -52,10 +52,12 @@ class JobPosting(db.Model):
 
     job_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
-    job_title = db.Column(db.String(100), nullable=False)
-    job_description = db.Column(db.String(300), nullable=False)
-    job_qualification = db.Column(db.String(300), nullable=False)
-    job_location = db.Column(db.String(100), nullable=False)
+    job_title = db.Column(db.String(200), nullable=False)
+    job_description = db.Column(db.Text, nullable=False)
+    job_qualification = db.Column(db.Text, nullable=False)
+    job_title = db.Column(db.String(200), nullable=False)
+    job_description = db.Column(db.Text, nullable=False)
+    job_location = db.Column(db.String(150), nullable=False)
     job_city = db.Column(db.String(20), nullable=False)
 
     job_industry = db.Column(

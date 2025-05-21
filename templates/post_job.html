@@ -261,7 +261,7 @@
                                 <i class="fas fa-building text-primary-500 mr-1"></i> {{ form.location.label }}
                                 <span class="text-red-500">*</span>
                             </label>
-                            {{ form.location(class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus transition duration-200 bg-white bg-opacity-90", placeholder="e.g. Remote or On-site") }}
+                            {{ form.location(class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus transition duration-200 bg-white bg-opacity-90", placeholder="e.g.Tech Tower, Shahrah-e-Faisal") }}
                             {% if form.location.errors %}
                                 <p class="text-sm text-red-500 mt-1 error-message">{{ form.location.errors[0] }}</p>
                             {% endif %}
@@ -273,7 +273,7 @@
                                 <i class="fas fa-city text-primary-500 mr-1"></i> {{ form.city.label }}
                                 <span class="text-red-500">*</span>
                             </label>
-                            {{ form.city(class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus transition duration-200 bg-white bg-opacity-90", placeholder="e.g. New York") }}
+                            {{ form.city(class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus transition duration-200 bg-white bg-opacity-90", placeholder="e.g. Karachi") }}
                             {% if form.city.errors %}
                                 <p class="text-sm text-red-500 mt-1 error-message">{{ form.city.errors[0] }}</p>
                             {% endif %}
